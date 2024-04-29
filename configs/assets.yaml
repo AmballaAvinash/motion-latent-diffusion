@@ -25,7 +25,7 @@ DATASET:
 model:
   bert_path: './deps/distilbert-base-uncased' # bert model path for all text encoders
   clip_path: './deps/clip-vit-large-patch14' # bert model path for all text encoders
-  t2m_path: './deps/t2m/'
+  t2m_path: './deps/t2m/t2m'
 
   humanact12_rec_path: './deps/actionrecognition'
   uestc_rec_path: './deps/actionrecognition'
