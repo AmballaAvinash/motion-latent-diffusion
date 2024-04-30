@@ -354,6 +354,8 @@ class Text2MotionDatasetV2(data.Dataset):
             except:
                 pass
 
+        print(new_name_list)
+        print(length_list)
         name_list, length_list = zip(
             *sorted(zip(new_name_list, length_list), key=lambda x: x[1]))
 
