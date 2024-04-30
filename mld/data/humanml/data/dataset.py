@@ -284,7 +284,7 @@ class Text2MotionDatasetV2(data.Dataset):
         bad_count = 0
         new_name_list = []
         length_list = []
-        print(count)
+        print(id_list)
         for i, name in enumerator:
             if count > maxdata:
                 break
