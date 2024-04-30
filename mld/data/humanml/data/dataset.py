@@ -355,6 +355,7 @@ class Text2MotionDatasetV2(data.Dataset):
                     count += 1
                     # print(name)
             except:
+                print("exception")
                 pass
 
         print(new_name_list)
