@@ -40,7 +40,7 @@ def parse_args(phase="train"):
             "--cfg",
             type=str,
             required=False,
-            default="./configs/config.yaml",
+            default="./configs/base.yaml",
             help="config file",
         )
         group.add_argument(
