@@ -41,7 +41,7 @@ TEST:
 
 # Datasets Configuration
 DATASET:
-  JOINT_TYPE: 'kit' # join type
+  JOINT_TYPE: 'humanml3d' # join type
 METRIC:
   TYPE: ['TemosMetric', 'TM2TMetrics']
 # Losses Configuration
