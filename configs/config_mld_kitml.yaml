@@ -64,7 +64,7 @@ TEST:
 # The following are basic datasets settings
 #####################################
 DATASET:
-  JOINT_TYPE: 'kit' # join type
+  JOINT_TYPE: 'humanml3d' # join type
 
 #####################################
 # The following are metric settings

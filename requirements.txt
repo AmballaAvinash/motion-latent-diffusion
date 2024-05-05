@@ -1,4 +1,4 @@
-pytorch_lightning 
+pytorch_lightning==1.9.0
 torchmetrics==0.7
 omegaconf
 shortuuid
