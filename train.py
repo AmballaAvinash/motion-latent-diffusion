@@ -134,7 +134,7 @@ def main():
     ]
     logger.info("Callbacks initialized")
 
-    if len(cfg.DEVICE) > 1:
+    if len(cfg.DEVICE) >= 1:
         # ddp_strategy = DDPStrategy(find_unused_parameters=False)
         ddp_strategy = "ddp"
     else:
