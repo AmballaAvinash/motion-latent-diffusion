@@ -34,6 +34,7 @@ class BASEDataModule(pl.LightningDataModule):
             eval(f"self.cfg.DATASET.{self.name.upper()}.SPLIT_ROOT"),
             self.cfg.EVAL.SPLIT + ".txt",
         )
+        print(split_file)
         return self.Dataset(split_file=split_file, **sample_params)
 
     def __getattr__(self, item):
