@@ -629,31 +629,37 @@ class GAN(BaseModel):
         }
     
 
-    def training_step(self, batch, batch_idx):
+    def training_step(self, batch, batch_idx, optimizer_idx):
         gan_rs_set = self.train_gan_forward(batch)
         d_loss = gan_rs_set["discriminator_loss"]
         g_loss = gan_rs_set["generator_loss"]
         
-        optimizer_g, optimizer_d = self.optimizers()
+        if optimizer_idx == 0:
+            self.log("d_loss", d_loss, on_step=True, on_epoch=True, prog_bar=True, logger=True)
+            return g_loss
         
-        self.toggle_optimizer(optimizer_g)
-        self.manual_backward(g_loss)
-        optimizer_g.step()
-        optimizer_g.zero_grad()
-        self.untoggle_optimizer(optimizer_g)
+        if optimizer_idx == 1:
+            self.log("g_loss", g_loss, on_step=True, on_epoch=True, prog_bar=True, logger=True)
+            return d_loss
+        
+        # optimizer_g, optimizer_d = self.optimizers()
+        
+        # self.toggle_optimizer(optimizer_g)
+        # self.manual_backward(g_loss)
+        # optimizer_g.step()
+        # optimizer_g.zero_grad()
+        # self.untoggle_optimizer(optimizer_g)
 
         
         
-        self.toggle_optimizer(optimizer_d)
-        self.manual_backward(d_loss)
-        optimizer_d.step()
-        optimizer_d.zero_grad()
-        self.untoggle_optimizer(optimizer_d)
+        # self.toggle_optimizer(optimizer_d)
+        # self.manual_backward(d_loss)
+        # optimizer_d.step()
+        # optimizer_d.zero_grad()
+        # self.untoggle_optimizer(optimizer_d)
 
-
-        self.log("d_loss", d_loss, on_step=True, on_epoch=True, prog_bar=True, logger=True)
-        self.log("g_loss", g_loss, on_step=True, on_epoch=True, prog_bar=True, logger=True)
-        return {"loss": d_loss + g_loss}
+        
+        # return {"loss": d_loss + g_loss}
 
     # def validation_step(self, batch, batch_idx):
     #     gan_rs_set = self.test_gan_forward(batch)
