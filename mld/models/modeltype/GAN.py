@@ -57,6 +57,8 @@ class GAN(BaseModel):
         self.guidance_uncodp = cfg.model.guidance_uncondp
         self.datamodule = datamodule
         
+        self.automatic_optimization = False
+        
         print(self.latent_dim)
 
         try:
@@ -621,13 +623,31 @@ class GAN(BaseModel):
         }
     
 
-    # def training_step(self, batch, batch_idx):
-    #     gan_rs_set = self.train_gan_forward(batch)
-    #     d_loss = gan_rs_set["discriminator_loss"]
-    #     g_loss = gan_rs_set["generator_loss"]
-    #     self.log("d_loss", d_loss, on_step=True, on_epoch=True, prog_bar=True, logger=True)
-    #     self.log("g_loss", g_loss, on_step=True, on_epoch=True, prog_bar=True, logger=True)
-    #     return {"loss": d_loss + g_loss}
+    def training_step(self, batch, batch_idx):
+        gan_rs_set = self.train_gan_forward(batch)
+        d_loss = gan_rs_set["discriminator_loss"]
+        g_loss = gan_rs_set["generator_loss"]
+        
+        optimizer_g, optimizer_d = self.optimizers()
+        
+        self.toggle_optimizer(optimizer_g)
+
+        self.manual_backward(g_loss)
+        optimizer_g.step()
+        optimizer_g.zero_grad()
+        
+        
+        self.toggle_optimizer(optimizer_d)
+        
+        self.manual_backward(d_loss)
+        optimizer_d.step()
+        optimizer_d.zero_grad()
+        self.untoggle_optimizer(optimizer_d)
+
+
+        self.log("d_loss", d_loss, on_step=True, on_epoch=True, prog_bar=True, logger=True)
+        self.log("g_loss", g_loss, on_step=True, on_epoch=True, prog_bar=True, logger=True)
+        return {"loss": d_loss + g_loss}
 
     # def validation_step(self, batch, batch_idx):
     #     gan_rs_set = self.test_gan_forward(batch)
