@@ -56,6 +56,8 @@ class GAN(BaseModel):
         self.guidance_scale = cfg.model.guidance_scale
         self.guidance_uncodp = cfg.model.guidance_uncondp
         self.datamodule = datamodule
+        
+        print(self.latent_dim)
 
         try:
             self.vae_type = cfg.model.vae_type
