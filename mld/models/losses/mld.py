@@ -26,7 +26,7 @@ class MLDLosses(Metric):
         losses = []
 
         # diffusion loss
-        if self.stage in ['diffusion', 'vae_diffusion']:
+        if self.stage in ["GAN, "'diffusion', 'vae_diffusion']:
             # instance noise loss
             losses.append("inst_loss")
             losses.append("x_loss")
