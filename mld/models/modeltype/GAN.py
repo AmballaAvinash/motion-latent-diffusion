@@ -72,7 +72,7 @@ class GAN(BaseModel):
 
         # Don't train the motion encoder and decoder
         if self.stage == "GAN":
-            self.gan = gan_architecture.CGAN(100, 10 , self.latent_dim)
+            self.gan = gan_architecture.CGAN(100, 10 , self.latent_dim[-1])
             
             if self.vae_type in ["mld", "vposert","actor"]:
                 self.vae.training = False
@@ -250,7 +250,7 @@ class GAN(BaseModel):
             
         elif self.stage=="GAN":
                         
-            noise = torch.rand(len(texts), self.latent_dim)
+            noise = torch.rand(len(texts), self.latent_dim[-1])
             
             text_emb = self.text_encoder(texts)
             
@@ -563,7 +563,7 @@ class GAN(BaseModel):
 
         # Sample Gaussian noise
         
-        noise = torch.rand(len(texts), self.latent_dim)
+        noise = torch.rand(len(texts), self.latent_dim[-1])
                 
         # Get text embeddings
         cond_emb = self.text_encoder(texts)
@@ -593,7 +593,7 @@ class GAN(BaseModel):
                 
                 
         # Sample Gaussian noise
-        noise = torch.randn(len(texts), self.latent_dim)
+        noise = torch.randn(len(texts), self.latent_dim[-1])
         
         cond_emb = self.text_encoder(texts)
 
@@ -793,7 +793,7 @@ class GAN(BaseModel):
             
         elif self.stage == "GAN":
 
-            noise = torch.randn(len(lengths), self.latent_dim)
+            noise = torch.randn(len(lengths), self.latent_dim[-1])
             
             text_emb = self.text_encoder(texts)
             
