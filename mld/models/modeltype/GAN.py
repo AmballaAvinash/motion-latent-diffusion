@@ -74,7 +74,7 @@ class GAN(BaseModel):
 
         # Don't train the motion encoder and decoder
         if self.stage == "GAN":
-            self.gan = gan_architecture.CGAN(100, 10 , self.latent_dim[-1])
+            self.gan = gan_architecture.CGAN(100, 768 , self.latent_dim[-1])  # text emb dim = 768
             
             if self.vae_type in ["mld", "vposert","actor"]:
                 self.vae.training = False
@@ -254,7 +254,7 @@ class GAN(BaseModel):
                         
             text_emb = self.text_encoder(texts)
             
-            noise = torch.randn((len(texts), self.latent_dim[-1]), device=text_emb.device, dtype=torch.float)
+            noise = torch.randn((len(texts), 100), device=text_emb.device, dtype=torch.float)
             
             
             z = self.gan(noise, text_emb)
@@ -569,7 +569,7 @@ class GAN(BaseModel):
         # Get text embeddings
         cond_emb = self.text_encoder(texts)
         
-        noise = torch.randn((len(texts), self.latent_dim[-1]), device=cond_emb.device, dtype=torch.float)
+        noise = torch.randn((len(texts), 100), device=cond_emb.device, dtype=torch.float)
                 
         
         
@@ -601,7 +601,7 @@ class GAN(BaseModel):
         
         cond_emb = self.text_encoder(texts)
         
-        noise = torch.randn((len(texts), self.latent_dim[-1]), device=cond_emb.device, dtype=torch.float)
+        noise = torch.randn((len(texts), 100), device=cond_emb.device, dtype=torch.float)
         
        
 
@@ -819,7 +819,7 @@ class GAN(BaseModel):
             
         elif self.stage == "GAN":
             text_emb = self.text_encoder(texts)
-            noise = torch.randn((len(lengths), self.latent_dim[-1]), device=text_emb.device, dtype=torch.float)
+            noise = torch.randn((len(lengths), 100), device=text_emb.device, dtype=torch.float)
             
             
             
