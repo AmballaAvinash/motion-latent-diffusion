@@ -25,8 +25,8 @@ class BaseModel(LightningModule):
         self.hparams.n_params_trainable = trainable
         self.hparams.n_params_nontrainable = nontrainable
 
-    # def training_step(self, batch, batch_idx):
-    #     return self.allsplit_step("train", batch, batch_idx)
+    def training_step(self, batch, batch_idx):
+        return self.allsplit_step("train", batch, batch_idx)
 
     def validation_step(self, batch, batch_idx):
         return self.allsplit_step("val", batch, batch_idx)
