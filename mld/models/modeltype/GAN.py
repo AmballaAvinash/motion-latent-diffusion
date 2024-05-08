@@ -669,7 +669,7 @@ class GAN(BaseModel):
     #     self.save_npy(outputs)
 
     def configure_optimizers(self):
-        return {"optimizer": self.gan.configure_optimizers()}
+        return self.gan.configure_optimizers()
         
     
     def train_diffusion_forward(self, batch):
