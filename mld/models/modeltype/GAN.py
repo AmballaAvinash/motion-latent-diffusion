@@ -1003,7 +1003,6 @@ class GAN(BaseModel):
                 
             elif self.stage=="GAN":
                 rs_set = self.train_gan_forward(batch)
-                print(rs_set)
                 
                 # d_loss = gan_rs_set["discriminator_loss"]
                 # g_loss = gan_rs_set["generator_loss"]
