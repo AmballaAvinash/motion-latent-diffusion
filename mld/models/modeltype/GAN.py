@@ -992,7 +992,7 @@ class GAN(BaseModel):
                 }
                 
             elif self.stage=="GAN":
-                rs_set = self.train_GAN_forward(batch)
+                rs_set = self.train_gan_forward(batch)
                 
                 # d_loss = gan_rs_set["discriminator_loss"]
                 # g_loss = gan_rs_set["generator_loss"]
@@ -1000,7 +1000,7 @@ class GAN(BaseModel):
                 # self.log(f"{split}/g_loss", g_loss, on_step=True, on_epoch=True, prog_bar=True, logger=True)
                 # return {"loss": d_loss + g_loss}
 
-                # t2m_rs_set = self.test_GAN_forward(batch)
+                # t2m_rs_set = self.test_gan_forward(batch)
                 
                 
                 
