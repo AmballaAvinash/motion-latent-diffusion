@@ -637,14 +637,14 @@ class GAN(BaseModel):
         optimizer_g, optimizer_d = self.optimizers()
         
         self.toggle_optimizer(optimizer_g)
-
         self.manual_backward(g_loss)
         optimizer_g.step()
         optimizer_g.zero_grad()
+        self.untoggle_optimizer(optimizer_g)
+
         
         
         self.toggle_optimizer(optimizer_d)
-        
         self.manual_backward(d_loss)
         optimizer_d.step()
         optimizer_d.zero_grad()
