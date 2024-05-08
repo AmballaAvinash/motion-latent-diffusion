@@ -47,7 +47,7 @@ class MLDLosses(Metric):
             # KL loss
             losses.append("kl_motion")
 
-        if self.stage not in ['vae', 'diffusion', 'vae_diffusion']:
+        if self.stage not in ["GAN", 'vae', 'diffusion', 'vae_diffusion']:
             raise ValueError(f"Stage {self.stage} not supported")
 
         losses.append("total")
