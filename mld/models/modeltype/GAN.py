@@ -252,9 +252,10 @@ class GAN(BaseModel):
             
         elif self.stage=="GAN":
                         
-            noise = torch.randn((len(texts), self.latent_dim[-1]), device=texts.device, dtype=torch.float)
-            
             text_emb = self.text_encoder(texts)
+            
+            noise = torch.randn((len(texts), self.latent_dim[-1]), device=text_emb.device, dtype=torch.float)
+            
             
             z = self.gan(noise, text_emb)
             
@@ -565,10 +566,12 @@ class GAN(BaseModel):
 
         # Sample Gaussian noise
         
-        noise = torch.randn((len(texts), self.latent_dim[-1]), device=texts.device, dtype=torch.float)
-                
         # Get text embeddings
         cond_emb = self.text_encoder(texts)
+        
+        noise = torch.randn((len(texts), self.latent_dim[-1]), device=cond_emb.device, dtype=torch.float)
+                
+        
         
         # Generate fake latent space using the generator
         fake_latent = self.gan(noise, cond_emb)
@@ -595,9 +598,12 @@ class GAN(BaseModel):
                 
                 
         # Sample Gaussian noise
-        noise = torch.randn((len(texts), self.latent_dim[-1]), device=texts.device, dtype=torch.float)
         
         cond_emb = self.text_encoder(texts)
+        
+        noise = torch.randn((len(texts), self.latent_dim[-1]), device=cond_emb.device, dtype=torch.float)
+        
+       
 
         
         fake_latent = self.gan(noise, cond_emb)
@@ -812,10 +818,10 @@ class GAN(BaseModel):
                 z = torch.randn_like(z)
             
         elif self.stage == "GAN":
-
-            noise = torch.randn((len(lengths), self.latent_dim[-1]), device=texts.device, dtype=torch.float)
-            
             text_emb = self.text_encoder(texts)
+            noise = torch.randn((len(lengths), self.latent_dim[-1]), device=text_emb.device, dtype=torch.float)
+            
+            
             
             z = self.gan(noise, text_emb)
         
