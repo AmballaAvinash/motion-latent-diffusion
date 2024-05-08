@@ -257,7 +257,7 @@ class GAN(BaseModel):
             noise = torch.randn((len(texts), 100), device=text_emb.device, dtype=torch.float)
             
             
-            z = self.gan(noise, text_emb)
+            z = self.gan(noise, text_emb).unsqueeze(0)
             
 
         with torch.no_grad():
@@ -606,7 +606,7 @@ class GAN(BaseModel):
        
 
         
-        fake_latent = self.gan(noise, cond_emb)
+        fake_latent = self.gan(noise, cond_emb).unsqueeze(0)
 
 
         with torch.no_grad():
@@ -823,8 +823,8 @@ class GAN(BaseModel):
             
             
             
-            z = self.gan(noise, text_emb)
-        
+            z = self.gan(noise, text_emb).unsqueeze(0)
+                    
 
         with torch.no_grad():
             if self.vae_type in ["mld", "vposert", "actor"]:
