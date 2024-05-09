@@ -52,7 +52,7 @@ EVAL:
 # The following are testing settings
 #####################################
 TEST:
-  CHECKPOINTS: #./checkpoints/mld_kit_checkpoint/1222_mld_kit_FID041.ckpt # Pretrained GAN model path
+  CHECKPOINTS: './experiments/GAN/1222_PELearn_GAN_Latent1_MEncDec49_MdiffEnc49_bs64_clip_uncond75_01/checkpoints/epoch=1999.ckpt'#./checkpoints/mld_kit_checkpoint/1222_mld_kit_FID041.ckpt # Pretrained GAN model path
   DATASETS: ['kit'] # training datasets
   SPLIT: test
   BATCH_SIZE: 1 # training Batch size
