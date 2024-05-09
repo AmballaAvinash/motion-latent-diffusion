@@ -56,6 +56,8 @@ class GAN(BaseModel):
         self.guidance_scale = cfg.model.guidance_scale
         self.guidance_uncodp = cfg.model.guidance_uncondp
         self.datamodule = datamodule
+        self.noise_dim = 100
+        self.text_emb_dim = 768
                 
         print(self.latent_dim)
 
@@ -72,7 +74,7 @@ class GAN(BaseModel):
 
         # Don't train the motion encoder and decoder
         if self.stage == "GAN":
-            self.gan = gan_architecture.CGAN(100, 768 , self.latent_dim[-1])  # text emb dim = 768
+            self.gan = gan_architecture.CGAN(self.noise_dim, self.text_emb_dim , self.latent_dim[-1])  # text emb dim = 768
             
             if self.vae_type in ["mld", "vposert","actor"]:
                 self.vae.training = False
@@ -252,7 +254,7 @@ class GAN(BaseModel):
                         
             text_emb = self.text_encoder(texts)
             
-            noise = torch.randn((len(texts), 100), device=text_emb.device, dtype=torch.float)
+            noise = torch.randn((len(texts), self.noise_dim), device=text_emb.device, dtype=torch.float)
             
             
             z = self.gan(noise, text_emb).unsqueeze(0)
@@ -567,7 +569,7 @@ class GAN(BaseModel):
         # Get text embeddings
         cond_emb = self.text_encoder(texts)
         
-        noise = torch.randn((len(texts), 100), device=cond_emb.device, dtype=torch.float)
+        noise = torch.randn((len(texts), self.noise_dim), device=cond_emb.device, dtype=torch.float)
                 
         
         
@@ -599,7 +601,7 @@ class GAN(BaseModel):
         
         cond_emb = self.text_encoder(texts)
         
-        noise = torch.randn((len(texts), 100), device=cond_emb.device, dtype=torch.float)
+        noise = torch.randn((len(texts), self.noise_dim), device=cond_emb.device, dtype=torch.float)
         
        
 
@@ -823,7 +825,7 @@ class GAN(BaseModel):
             
         elif self.stage == "GAN":
             text_emb = self.text_encoder(texts)
-            noise = torch.randn((len(lengths), 100), device=text_emb.device, dtype=torch.float)
+            noise = torch.randn((len(lengths), self.noise_dim), device=text_emb.device, dtype=torch.float)
             
             
             

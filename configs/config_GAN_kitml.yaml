@@ -29,8 +29,8 @@ TRAIN:
   # Total epochs for training
   END_EPOCH: 2000
 
-  RESUME: '' # Resume training from this path
-  PRETRAINED_VAE: './experiments/mld/1222_PELearn_VAE_MEncDec49_MdiffEnc49_bs64_clip_uncond75_01/checkpoints/epoch=199.ckpt' # vae model path
+  RESUME: '' # Resume GAN training from this path
+  PRETRAINED_VAE: './experiments/mld/1222_PELearn_VAE_MEncDec49_MdiffEnc49_bs64_clip_uncond75_01/checkpoints/epoch=1199.ckpt' # vae model path
   OPTIM:
     TYPE: AdamW # Optimizer type
     LR: 1e-4 # Learning rate
@@ -52,7 +52,7 @@ EVAL:
 # The following are testing settings
 #####################################
 TEST:
-  CHECKPOINTS: ./checkpoints/mld_kit_checkpoint/1222_mld_kit_FID041.ckpt # Pretrained model path
+  CHECKPOINTS: #./checkpoints/mld_kit_checkpoint/1222_mld_kit_FID041.ckpt # Pretrained GAN model path
   DATASETS: ['kit'] # training datasets
   SPLIT: test
   BATCH_SIZE: 1 # training Batch size
