@@ -106,7 +106,7 @@ model:
 # The following are loggers settings
 #####################################
 LOGGER:
-  SACE_CHECKPOINT_EPOCH: 200
+  SACE_CHECKPOINT_EPOCH: 50
   LOG_EVERY_STEPS: 1
   VAL_EVERY_STEPS: 200
   TENSORBOARD: True
