@@ -147,6 +147,12 @@ class MLD(BaseModel):
         load T2M text encoder and motion encoder for evaluating
         """
         # init module
+        print(cfg.model.t2m_textencoder.dim_word)
+        print(cfg.model.t2m_textencoder.dim_pos_ohot)
+        print(cfg.model.t2m_textencoder.dim_text_hidden)
+        print(cfg.model.t2m_textencoder.dim_coemb_hidden)
+        
+        
         self.t2m_textencoder = t2m_textenc.TextEncoderBiGRUCo(
             word_size=cfg.model.t2m_textencoder.dim_word,
             pos_size=cfg.model.t2m_textencoder.dim_pos_ohot,
