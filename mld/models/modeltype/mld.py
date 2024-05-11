@@ -159,7 +159,7 @@ class MLD(BaseModel):
         )
 
         self.t2m_moveencoder = t2m_motionenc.MovementConvEncoder(
-            input_size=cfg.DATASET.NFEATS - 4,
+            input_size=  247,  #cfg.DATASET.NFEATS - 4,
             hidden_size=cfg.model.t2m_motionencoder.dim_move_hidden,
             output_size=cfg.model.t2m_motionencoder.dim_move_latent,
         )
