@@ -1,4 +1,4 @@
-NAME: 1222_PELearn_VAE_MEncDec49_MdiffEnc49_bs64_clip_uncond75_01 # Experiment name
+NAME: 1222_PELearn_VAE_MEncDec49_MdiffEnc49_bs64_clip_uncond75_02 # Experiment name
 DEBUG: False # Debug mode
 ACCELERATOR: 'gpu' # Devices optioncal: “cpu”, “gpu”, “tpu”, “ipu”, “hpu”, “mps, “auto”
 DEVICE: [0] # Index of gpus eg. [0] or [0,1,2,3]
@@ -17,7 +17,7 @@ TRAIN:
   BATCH_SIZE: 128 # Size of batches
   START_EPOCH: 0 # Start epochMMOTIONENCODER
   END_EPOCH: 6000 # End epoch
-  RESUME: './experiments/mld/1222_PELearn_VAE_MEncDec49_MdiffEnc49_bs64_clip_uncond75_01/' # Resume VAE training from this path
+  RESUME: '' # Resume VAE training from this path
   PRETRAINED_VAE: ''
   OPTIM:
     TYPE: AdamW # Optimizer type
@@ -31,7 +31,7 @@ EVAL:
 
 # Test Configuration
 TEST:
-  CHECKPOINTS: './experiments/mld/1222_PELearn_VAE_MEncDec49_MdiffEnc49_bs64_clip_uncond75_01/checkpoints/epoch=1599.ckpt' # Pretrained VAE model path
+  CHECKPOINTS: '' # Pretrained VAE model path
   DATASETS: ['kit'] # training datasets
   SPLIT: test
   BATCH_SIZE: 32 # training Batch size

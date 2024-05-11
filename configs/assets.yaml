@@ -8,8 +8,8 @@ DATASET:
   TRANSFORM_PATH: './deps/transforms/'
   WORD_VERTILIZER_PATH: './deps/t2m/glove/'
   KIT:
-    ROOT: './datasets/kit-ml/KIT-ML' # KIT directory
-    SPLIT_ROOT: './datasets/kit-ml/KIT-ML' # KIT splits directory
+    ROOT: './datasets/kit-ml/motionml' # KIT directory
+    SPLIT_ROOT: './datasets/kit-ml/motionml' # KIT splits directory
   HUMANML3D:
     ROOT: './datasets/humanml3d' # HumanML3D directory
     SPLIT_ROOT: './datasets/humanml3d' # HumanML3D splits directory
