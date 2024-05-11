@@ -147,6 +147,7 @@ class MLD(BaseModel):
         load T2M text encoder and motion encoder for evaluating
         """
         # init module
+        print(cfg.DATASET.NFEATS)
         print(cfg.model.t2m_motionencoder.dim_move_hidden)
         print(cfg.model.t2m_motionencoder.dim_move_latent)
         
