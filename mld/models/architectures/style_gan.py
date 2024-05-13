@@ -1,7 +1,6 @@
 import torch
 import torch.nn as nn
 import pytorch_lightning as pl
-import torch.nn.functional as F
 
 #factors = [1, 1, 1, 1, 1 / 2, 1 / 4, 1 / 8]
 #factors = [1, 1, 1, 1, 1, 1, 1, 1, 1]
@@ -174,11 +173,12 @@ class Discriminator(nn.Module):
   with the predicted class probabilities (generated or real data)
   '''
 
-  def __init__(self, in_channels = 256):
+  def __init__(self, text_in = 768, in_channels = 256):
     super(Discriminator, self).__init__()
     
     self.prog_blocks, self.xyz_layers = nn.ModuleList([]), nn.ModuleList([])
     self.leaky = nn.LeakyReLU(0.2)
+    self.init_lin = nn.Linear(in_channels + text_in, in_channels)
     for i in range(len(factors) - 1):
         conv_in = int(in_channels * factors[i])
         conv_out = int(in_channels * factors[i + 1])
@@ -187,14 +187,17 @@ class Discriminator(nn.Module):
 
     self.sigmoid = nn.Sigmoid()
 
-  def forward(self, x, text_emb, alpha = 1.0, steps = 4):
+  def forward(self, x, text_emb, steps = 4):
     # pass the labels into a embedding layer
     # labels_embedding = self.embedding(y)
     # concat the embedded labels and the input tensor
     # x is a tensor of size (batch_size, 794)
     #print('disc inp shape', x.shape, len(self.prog_blocks), steps)
     cur_step = len(self.prog_blocks) - steps
-    out = x
+    #print('disc', z.shape, text_emb.shape)
+    text_emb = text_emb.reshape(text_emb.shape[0],-1)
+    x = torch.cat([x, text_emb], dim=-1)   
+    out = self.init_lin(x)
     for step in range(cur_step, len(self.prog_blocks)):
         out = self.prog_blocks[step](out)
     out = self.sigmoid(out)
@@ -239,7 +242,8 @@ class CGAN(pl.LightningModule):
     # loss, which is equivalent to minimizing the loss with the true
     # labels flipped (i.e. y_true=1 for fake images). We do this
     # as PyTorch can only minimize a function instead of maximizing
-    g_loss = self.BCE_loss(fake_pred, torch.ones_like(fake_pred))
+    # g_loss = self.BCE_loss(fake_pred, torch.ones_like(fake_pred))
+    g_loss =  -torch.mean(fake_pred)
 
     return g_loss
 
@@ -257,15 +261,19 @@ class CGAN(pl.LightningModule):
       # Real images
       x = x.reshape(z.shape[0], -1)
       real_pred = torch.squeeze(self.discriminator(x, text_emb))
-      real_loss = self.BCE_loss(real_pred, torch.ones_like(real_pred))
+      # real_loss = self.BCE_loss(real_pred, torch.ones_like(real_pred))
     
     
       fake_latent = self(z, text_emb).detach() 
       fake_pred = torch.squeeze(self.discriminator(fake_latent, text_emb))
-      fake_loss = self.BCE_loss(fake_pred, torch.zeros_like(fake_pred))
+      # fake_loss = self.BCE_loss(fake_pred, torch.zeros_like(fake_pred))
     
     
-      d_loss = (real_loss + fake_loss) / 2
+      # d_loss = (real_loss + fake_loss) / 2
+      
+      
+      d_loss = torch.mean(fake_pred) - torch.mean(real_pred)
+      
       return d_loss
 
     
