@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import inspect
 import os
 from mld.transforms.rotation2xyz import Rotation2xyz
@@ -17,8 +16,8 @@ from mld.models.architectures import (
     t2m_motionenc,
     t2m_textenc,
     vposert_vae,
-    gan_architecture,  # Import the GAN
-
+    gan_architecture,  # Import the GAN, 
+    style_gan  # style GAN
 )
 from mld.models.losses.mld import MLDLosses
 from mld.models.modeltype.base import BaseModel
@@ -75,7 +74,8 @@ class GAN(BaseModel):
         # Don't train the motion encoder and decoder
         if self.stage == "GAN":
             self.gan = gan_architecture.CGAN(self.noise_dim, self.text_emb_dim , self.latent_dim[-1])  # text emb dim = 768
-            
+            # self.gan = style_gan.CGAN(self.noise_dim, self.text_emb_dim , self.latent_dim[-1])  # text emb dim = 768
+
             if self.vae_type in ["mld", "vposert","actor"]:
                 self.vae.training = False
                 for p in self.vae.parameters():
@@ -635,11 +635,11 @@ class GAN(BaseModel):
         g_loss = gan_rs_set["generator_loss"]
         
         if optimizer_idx == 0:
-            self.log("d_loss", d_loss, on_step=True, on_epoch=True, prog_bar=True, logger=True)
+            self.log("g_loss", g_loss, on_step=True, on_epoch=True, prog_bar=True, logger=True)        
             return g_loss
         
         if optimizer_idx == 1:
-            self.log("g_loss", g_loss, on_step=True, on_epoch=True, prog_bar=True, logger=True)
+            self.log("d_loss", d_loss, on_step=True, on_epoch=True, prog_bar=True, logger=True)
             return d_loss
         
         # optimizer_g, optimizer_d = self.optimizers()
