@@ -14,4 +14,4 @@ module load miniconda/22.11.1-1
 
 conda activate 674_IVC
 
-python -m train --cfg configs/config_vae_humanml3d.yaml --cfg_assets configs/assets.yaml --batch_size 64 --nodebug
+python -m train --cfg configs/config_GAN_humanml3d.yaml --cfg_assets configs/assets.yaml --batch_size 64 --nodebug
