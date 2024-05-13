@@ -29,7 +29,7 @@ TRAIN:
   # Total epochs for training
   END_EPOCH: 2000
 
-  RESUME: '' # Resume GAN training from this path
+  RESUME: './experiments/GAN/1222_PELearn_GAN_Latent1_MEncDec49_MdiffEnc49_bs64_clip_uncond75_HumanMl/' # Resume GAN training from this path
   PRETRAINED_VAE: './experiments/mld/1222_PELearn_VAE_MEncDec49_MdiffEnc49_bs64_clip_uncond75_HumanMl/checkpoints/epoch=349.ckpt' # vae model path
   OPTIM:
     TYPE: AdamW # Optimizer type
@@ -52,7 +52,7 @@ EVAL:
 # The following are testing settings
 #####################################
 TEST:
-  CHECKPOINTS: ''# Pretrained GAN model path
+  CHECKPOINTS: './experiments/GAN/1222_PELearn_GAN_Latent1_MEncDec49_MdiffEnc49_bs64_clip_uncond75_HumanMl/checkpoints/epoch=149.ckpt'# Pretrained GAN model path
   DATASETS: ['humanml3d'] # training datasets
   SPLIT: test
   BATCH_SIZE: 1 # training Batch size
