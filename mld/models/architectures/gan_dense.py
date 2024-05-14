@@ -26,9 +26,12 @@ class Generator(nn.Module):
         x = self.linear1(x)
         x = self.bn1(x)
         x = self.relu1(x)
-
+        
+        print(x.shape)
         x = self.residual_block1(x)
+        print(x.shape)
         x = self.residual_block2(x)
+        print(x.shape)
 
         x = self.linear2(x)
         return x
