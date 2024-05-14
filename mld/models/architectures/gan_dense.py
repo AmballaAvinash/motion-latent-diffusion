@@ -33,6 +33,7 @@ class Generator(nn.Module):
         x = self.linear2(x)
         return x
 
+
 class ResidualBlock(nn.Module):
     def __init__(self, in_channels, out_channels, stride=1):
         super().__init__()
@@ -51,13 +52,15 @@ class ResidualBlock(nn.Module):
             )
 
     def forward(self, x):
-        out = self.relu(self.bn1(self.conv1(x)))
+        batch_size, in_channels, _ = x.size()
+        out = self.relu(self.bn1(self.conv1(x.view(batch_size, in_channels, -1))))
         out = self.bn2(self.conv2(out))
-        out += self.shortcut(x)
-        out = self.layer_norm(out)
+        out += self.shortcut(x.view(batch_size, in_channels, -1))
+        out = self.layer_norm(out.view(batch_size, -1))
         out = self.relu(out)
-        return out
-
+        return out.view(batch_size, out.size(1), 1)
+    
+    
 class Discriminator(nn.Module):
     """
     Discriminator class in a CGAN. Accepts a tensor of size 784 and
