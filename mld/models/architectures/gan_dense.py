@@ -27,39 +27,11 @@ class Generator(nn.Module):
         x = self.bn1(x)
         x = self.relu1(x)
 
-        print(x.shape)
         x = self.residual_block1(x)
-        print(x.shape)
         x = self.residual_block2(x)
-        print(x.shape)
 
         x = self.linear2(x)
         return x
-
-# class ResidualBlock(nn.Module):
-#     def __init__(self, in_channels, out_channels, stride=1):
-#         super().__init__()
-#         self.conv1 = nn.Conv1d(in_channels, out_channels, kernel_size=3, stride=stride, padding=1, bias=False)
-#         self.bn1 = nn.BatchNorm1d(out_channels)
-#         self.relu = nn.ReLU(inplace=True)
-#         self.conv2 = nn.Conv1d(out_channels, out_channels, kernel_size=3, stride=1, padding=1, bias=False)
-#         self.bn2 = nn.BatchNorm1d(out_channels)
-#         self.layer_norm = nn.LayerNorm(out_channels)
-
-#         self.shortcut = nn.Sequential()
-#         if stride != 1 or in_channels != out_channels:
-#             self.shortcut = nn.Sequential(
-#                 nn.Conv1d(in_channels, out_channels, kernel_size=1, stride=stride, bias=False),
-#                 nn.BatchNorm1d(out_channels)
-#             )
-
-#     def forward(self, x):
-#         out = self.relu(self.bn1(self.conv1(x)))
-#         out = self.bn2(self.conv2(out))
-#         out += self.shortcut(x)
-#         out = self.layer_norm(out)
-#         out = self.relu(out)
-#         return out
 
 
 class ResidualBlock(nn.Module):
