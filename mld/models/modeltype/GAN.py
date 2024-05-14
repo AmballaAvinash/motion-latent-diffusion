@@ -16,7 +16,8 @@ from mld.models.architectures import (
     t2m_motionenc,
     t2m_textenc,
     vposert_vae,
-    gan_architecture,  # Import the GAN, 
+    gan_architecture,  # Import the basic GAN, 
+    gan_dense,  # import the dense GAN
     style_gan  # style GAN
 )
 from mld.models.losses.mld import MLDLosses
@@ -74,7 +75,8 @@ class GAN(BaseModel):
         # Don't train the motion encoder and decoder
         if self.stage == "GAN":
             # self.gan = gan_architecture.CGAN(self.noise_dim, self.text_emb_dim , self.latent_dim[-1])  # text emb dim = 768
-            self.gan = style_gan.CGAN(self.noise_dim, self.text_emb_dim , self.latent_dim[-1])  # text emb dim = 768
+            # self.gan = style_gan.CGAN(self.noise_dim, self.text_emb_dim , self.latent_dim[-1])  # text emb dim = 768
+            self.gan = gan_dense.CGAN(self.noise_dim, self.text_emb_dim , self.latent_dim[-1])  # text emb dim = 768
 
             if self.vae_type in ["mld", "vposert","actor"]:
                 self.vae.training = False
