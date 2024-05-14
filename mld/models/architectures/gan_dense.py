@@ -52,7 +52,7 @@ class ResidualBlock(nn.Module):
             )
 
     def forward(self, x):
-        batch_size, in_channels, _ = x.size()
+        batch_size, in_channels = x.size()
         out = self.relu(self.bn1(self.conv1(x.view(batch_size, in_channels, -1))))
         out = self.bn2(self.conv2(out))
         out += self.shortcut(x.view(batch_size, in_channels, -1))
