@@ -3,7 +3,7 @@ import importlib
 
 def get_model(cfg, datamodule, phase="train"):
     modeltype = cfg.model.model_type
-    if modeltype == "mld" or modeltype=="GAN":
+    if modeltype == "mld" or modeltype=="GAN" or modeltype=="WGAN":
         return get_module(cfg, datamodule)
     else:
         raise ValueError(f"Invalid model type {modeltype}.")
