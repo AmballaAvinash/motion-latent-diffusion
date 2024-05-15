@@ -74,6 +74,7 @@ class WGAN(BaseModel):
 
         # Don't train the motion encoder and decoder
         if self.stage == "GAN":
+            print("WGAN")
             self.gan = wgan_architecture.CGAN(self.noise_dim, self.text_emb_dim , self.latent_dim[-1])  # text emb dim = 768
             # self.gan = wstyle_gan.CGAN(self.noise_dim, self.text_emb_dim , self.latent_dim[-1])  # text emb dim = 768
             # self.gan = wgan_dense.CGAN(self.noise_dim, self.text_emb_dim , self.latent_dim[-1])  # text emb dim = 768
