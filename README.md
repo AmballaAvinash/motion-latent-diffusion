@@ -213,7 +213,7 @@ text file: the input text prompt
 
 <details>
 <summary><b>Outputs</b></summary>
-You can find the npy converted to video here: https://drive.google.com/drive/folders/1Ik9CkRPsKm3_Gy8cMDZSJg1_K-qC8YDC?usp=drive_link
+You can find the npy converted to video here: https://drive.google.com/drive/folders/1ocYIgjiVJBfSw_jg_uHzdxwanFX3QwOY?usp=drive_link
 </details>
 
 <details>
