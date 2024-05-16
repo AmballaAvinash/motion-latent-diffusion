@@ -75,7 +75,7 @@ class GAN(BaseModel):
 
         # Don't train the motion encoder and decoder
         if self.stage == "GAN":
-            if self.arch_type == "basic":
+            if self.arch_type == "simple":
                 self.gan = gan_architecture.CGAN(self.noise_dim, self.text_emb_dim , self.latent_dim[-1])  # text emb dim = 768
             elif self.arch_type == "mlp":
                 self.gan = mlp_gan.CGAN(self.noise_dim, self.text_emb_dim , self.latent_dim[-1])  # text emb dim = 768

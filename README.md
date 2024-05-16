@@ -108,9 +108,9 @@ Given below is the valid architecture types you can test and demo:
 
 stage  | architectures |
 -------|-------------------|
-GAN    | basic, dense, mlp |
-WGAN   | basic, dense |
-WGANGP | basic |
+GAN    | simple, dense, mlp |
+WGAN   | simple, dense |
+WGANGP | simple |
 
 Use the appropriate config files based on the model stage as follows:
 
@@ -140,15 +140,16 @@ python -m train --cfg configs/config_vae_humanml3d.yaml --cfg_assets configs/ass
 <summary> <b>Train GAN</b> </summary>
 Ready to train GAN model?
 
-Please update the parameters in configs/config_mld_kitml.yaml, e.g. NAME, Update the PRETRAINED_VAE to the latest VAE ckpt model path in previous step
-Use model_type=GAN for GAN training, WGAN for Wassestein GAN training and WGANGP for Wasserstein GAN-GP.
-
-Also in the model_type/GAN.py or model_type/WGAN.py from lines from 77-79, uncomment only the required self.gan initialization based on the required architecture of GAN (simple, dense, style) Then, run the following command:
+Please update the parameters in configs/config_GAN_kitml.yaml, e.g. NAME, Update the PRETRAINED_VAE to the latest VAE ckpt model path in previous step
+Use TRAIN.STAGE=GAN and model.model_type=GAN for GAN training, WGAN for Wassestein GAN training and WGANGP for Wasserstein GAN-GP respectively.
+Please note you have to change both parameters for changes to work smoothly.
 
 ```
 python -m train --cfg configs/config_GAN_humanml3d.yaml --cfg_assets configs/assets.yaml --batch_size 64 --nodebug
 ```
-change the config files depending on the model type (GAN, WGAN, WGANGP). Set the architecture in model.arch_type
+
+change the config files depending on the model type (GAN, WGAN, WGANGP). Set the architecture in model.arch_type (simple, dense, mlp). Refer
+to **Important Instructions** to get all valid architecture types for each model.
 
 </details>
 

@@ -92,7 +92,7 @@ LOSS:
 model:
   vae: true # whether vae model
   model_type: WGAN # model type
-  arch_type: dense # arch_type
+  arch_type: simple # arch_type
   condition: 'text'
   latent_dim: [1, 256] # latent dimension
   ff_size: 1024 #

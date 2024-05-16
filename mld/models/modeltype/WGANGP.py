@@ -74,7 +74,7 @@ class WGANGP(BaseModel):
 
         # Don't train the motion encoder and decoder
         if self.stage == "WGANGP":
-            if self.arch_type == "basic":
+            if self.arch_type == "simple":
                 self.gan = wgangp_basic.WGAN(self.noise_dim, self.text_emb_dim , self.latent_dim[-1])  # text emb dim = 768
             else:
                 raise Exception('Invalid architecture type for stage WGANGP')
