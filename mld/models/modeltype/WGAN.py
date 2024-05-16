@@ -74,7 +74,7 @@ class WGAN(BaseModel):
             self.vae = instantiate_from_config(cfg.model.motion_vae)
 
         # Don't train the motion encoder and decoder
-        if self.stage == "GAN":
+        if self.stage == "WGAN":
             print("WGAN")
             if self.arch_type == "basic":
                 self.gan = wgan_architecture.CGAN(self.noise_dim, self.text_emb_dim , self.latent_dim[-1])  # text emb dim = 768
@@ -259,7 +259,7 @@ class WGAN(BaseModel):
             motions = batch['motion']
             z, dist_m = self.vae.encode(motions, lengths)
             
-        elif self.stage=="GAN":
+        elif self.stage=="WGAN":
                         
             text_emb = self.text_encoder(texts)
             
@@ -839,7 +839,7 @@ class WGAN(BaseModel):
                 # uncond random sample
                 z = torch.randn_like(z)
             
-        elif self.stage == "GAN":
+        elif self.stage == "WGAN":
             text_emb = self.text_encoder(texts)
             noise = torch.randn((len(lengths), self.noise_dim), device=text_emb.device, dtype=torch.float)
             
@@ -1019,7 +1019,7 @@ class WGAN(BaseModel):
                     "lat_t": t2m_rs_set["lat_t"],
                 }
                 
-            elif self.stage=="GAN":
+            elif self.stage=="WGAN":
                 rs_set = self.train_gan_forward(batch)
                 
                 # d_loss = gan_rs_set["discriminator_loss"]
