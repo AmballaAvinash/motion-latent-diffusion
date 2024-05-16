@@ -36,7 +36,7 @@ You can download the Human ML data from our drive : https://drive.google.com/fil
 </details>
 
 <details>
-<summary> <b>Code changes</b> </summary>
+<summary> <b>Repository Details</b> </summary>
 1. Our Code Changes (and explaining the folder structure)
 datasets
 
@@ -51,7 +51,8 @@ datasets
     prepare:
 
     - contains bash scripts to download the dependecies. Also make sure once you download edit the path accordingly in the configs/assest.yaml
-    mld
+
+mld
 
     - models: 
 
@@ -61,14 +62,21 @@ datasets
             - base.py: base pytorch lighting module, mld.package
             - GAN.py (added this file): this files used in the train.py. Internally calls architectures/gan_arcitecture.py etc
             - WGAN.py (added this file):  this files used in the train.py. Internally calls architectures/wgan_arcitecture.py etc
+            - WGANGP.py (added this file):  this files used in the train.py. Internally calls architectures/wgangp_basic.py etc
+
 
         - architectures: define architectures
             - gan_arcitecture.py (added this file): Has the simple GAN architecture with BCE loss
             - wgan_arcitecture.py (added this file):  Has the simple GAN architecture with Wassestein loss
             - gan_dense.py (added this file):  Has the Dense GAN architecture with BCE loss
             - wgan_dense.py (added this file): Has the Dense GAN architecture with Wassestein loss
-            - style_gan.py (added this file): Has the style GAN architecture with BCE loss
-            - wstyle_gan.py (added this file): Has the style GAN architecture with Wassestein loss
+            - mlp_gan.py (added this file): Has the MLP GAN architecture with BCE loss
+            - wmlp_gan.py (added this file): Has the MLP GAN architecture with Wassestein loss
+            - wgangp_basic.py (added this file): Has the simple GAN architecture with Wassestein loss and gradient penalty
+
+        -losses: 
+            - mld.py: added lines 50-55, 95-96, 136-139 to handle the stage "GAN"
+
     - train.py -> file in which training VAE or GAN happens.
 
     - trainer_bash.sh (added this file) -> To run the training in GPU
@@ -81,11 +89,42 @@ datasets
 
     - demo/example.txt: text input for testing
 
-    results:
+results:
 
     - GAN: results with GAN architectures
 
     - WGAN: results with WGAN architecture
+
+
+</details>
+
+<details>
+<summary> <b>Important instructions to note before running scripts </b></summary>
+We have set up config files depending on the model type you want to test (GAN, WGAN, WGANGP) and the architecture type.
+
+The architecture type is set in model.arch_type in config files.
+
+Given below is the valid architecture types you can test and demo:
+
+stage  | architectures |
+-------|-------------------|
+GAN    | basic, dense, mlp |
+WGAN   | basic, dense |
+WGANGP | basic |
+
+Use the appropriate config files based on the model stage as follows:
+
+stage  | config file path |
+-------|-------------------|
+GAN    | ./configs/config_GAN_humanml3d.yaml |
+WGAN   | ./configs/config_WGAN_humanml3d.yaml |
+WGANGP | ./configs/config_WGANGP_humanml3d.yaml |
+
+Make a checkpoints folder before running demo scripts so the models are downloaded and stored in the folder.
+
+To make it easier for you to test the models, we have setup the demo script such that it will accept the model type and architecture type
+from config files and automatically download the best model we have trained to the checkpoints folder.
+
 </details>
 
 <details>
@@ -109,6 +148,8 @@ Also in the model_type/GAN.py or model_type/WGAN.py from lines from 77-79, uncom
 ```
 python -m train --cfg configs/config_GAN_humanml3d.yaml --cfg_assets configs/assets.yaml --batch_size 64 --nodebug
 ```
+change the config files depending on the model type (GAN, WGAN, WGANGP). Set the architecture in model.arch_type
+
 </details>
 
 <details>
@@ -120,6 +161,9 @@ python -m train --cfg configs/config_GAN_humanml3d.yaml --cfg_assets configs/ass
     To test trained VAE: ```python -m test --cfg configs/config_vae_humanml3d.yaml --cfg_assets configs/assets.yaml```
 
     To test trained GAN: ```python -m test --cfg configs/config_GAN_humanml3d.yaml --cfg_assets configs/assets.yaml```
+
+    change the config files depending on the model type (GAN, WGAN, WGANGP). Set the architecture in model.arch_type
+
 </details>
 
 <details>
@@ -152,14 +196,6 @@ In case the video generation fails but the frames are generated succefully, use 
 
 Make a folder called 'checkpoints' which will store all the necessary model checkpoints required to run this project and demo it.
 
-Use the appropriate config files based on the model stage as follows:
-
-stage | config file path |
-------|-------------------|
-gan   | ./configs/config_GAN_humanml3d.yaml |
-wgan  | ./configs/config_WGAN_humanml3d.yaml |
-wgangp| ./configs/config_WGANGP_humanml3d.yaml |
-
 Set the stage variable in TRAIN.STAGE inside the config files to set the GAN model type. To set the specific architecture (basic, dense, mlp) set it under
 model.arch_type in the config files.
 
@@ -181,9 +217,10 @@ You can find the npy converted to video here: https://drive.google.com/drive/fol
 
 <details>
 <summary><b>Contributions</b></summary>
-Avinash Amballa: Trained VAE, Setup the intiial code base and implmented the Simple GAN, Dense GAN with BCE loss. (gan_architecture.py, gan_dense.py, GAN.py)
 
-Vinitra Muralikrishnan: Implemented Style GAN with BCE loss and Wassestein loss. Implemented Basic WGAN with Gradient Penality. (mlp_gan.py, wmlp_gan.py and wgangp_basic.py)
+- Avinash Amballa: Trained VAE, Setup the intiial code base and implmented the Simple GAN, Dense GAN with BCE loss. (gan_architecture.py, gan_dense.py, GAN.py)
 
-Gayathri Akkinapalli: Implemented Simple GAN, Dense GAN with Wasserstein loss. Set up belder to render video from npy files.
+- Vinitra Muralikrishnan: Implemented MLP GAN with BCE loss and Wassestein loss. Implemented Basic WGAN with Gradient Penality. (mlp_gan.py, wmlp_gan.py and wgangp_basic.py, WGANGP.py)
+
+- Gayathri Akkinapalli: Implemented Simple GAN, Dense GAN with Wasserstein loss. Set up belder to render video from npy files. (wgan_architecture.py, wgan_dense.py, WGAN.py)
 </details>
