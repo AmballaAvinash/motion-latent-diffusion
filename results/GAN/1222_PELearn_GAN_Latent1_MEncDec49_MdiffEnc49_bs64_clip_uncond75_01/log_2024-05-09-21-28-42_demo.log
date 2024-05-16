@@ -1,8 +1,0 @@
-2024-05-09 21:28:44,790 Loading checkpoints from ./experiments/GAN/1222_PELearn_GAN_Latent1_MEncDec49_MdiffEnc49_bs64_clip_uncond75_01/checkpoints/epoch=1399.ckpt
-2024-05-09 21:28:47,754 model GAN loaded
-2024-05-09 21:28:48,547 Motions are generated here:
-results/GAN/1222_PELearn_GAN_Latent1_MEncDec49_MdiffEnc49_bs64_clip_uncond75_01/samples_2024-05-09-21-28-42/Example_50_batch0_0.npy
-2024-05-09 21:28:48,554 Motions are generated here:
-results/GAN/1222_PELearn_GAN_Latent1_MEncDec49_MdiffEnc49_bs64_clip_uncond75_01/samples_2024-05-09-21-28-42/Example_100_batch0_1.npy
-2024-05-09 21:28:48,562 Motions are generated here:
-results/GAN/1222_PELearn_GAN_Latent1_MEncDec49_MdiffEnc49_bs64_clip_uncond75_01/samples_2024-05-09-21-28-42/Example_100_batch0_2.npy
