@@ -18,7 +18,8 @@ from mld.data.get_data import get_datasets
 from mld.data.sampling import subsample, upsample
 from mld.models.get_model import get_model
 from mld.utils.logger import create_logger
-
+import gdown
+import os
 
 def main():
     """
@@ -41,6 +42,39 @@ def main():
     cfg.FOLDER = cfg.TEST.FOLDER
     cfg.Name = "demo--" + cfg.NAME
     logger = create_logger(cfg, phase="demo")
+
+    #set up model checkpoints
+    chkpoint_ids = {
+        "GAN": {
+            "basic": "1ZiUPvCv4IIb5txD5bcH5Z7zIVdgGz0XB",
+            "mlp": "16ASCyafAMr1qNJOf3G4pQJiX0bNyrHT7",
+            "dense": "1hd2tN1X8HGt6IEULT0-wXbqYtNHf9tFY"
+        },
+        "WGAN": {
+            "basic": "1K0PJx8jOkV1ypds2NDDXhObey42XP3QX",
+            "dense": "1hd2tN1X8HGt6IEULT0-wXbqYtNHf9tFY",
+        },
+        "WGANGP": {
+            "basic": "1rrwiOW2dib6nuMVvmo95iydGmUy9lKop"
+        }
+    }
+    if not(os.path.exists("./checkpoints")):
+        raise Exception("couldn't checkpoints folder in project root folder, please create one!")
+    drive_prior = 'https://drive.google.com/uc?id='
+    url = "https://drive.google.com/uc?id=1yK7SAeS4mWnJ4ZIv_E1-a24BnKaDUCmB"
+    if not(os.path.exists('./checkpoints/VAE_HUMAN_ML_epoch=1249.ckpt')):
+        gdown.download(url, "./checkpoints/VAE_HUMAN_ML_epoch=1249.ckpt")
+    if cfg.TRAIN.STAGE == "" or cfg.model.arch_type == "":
+        raise Exception("Configure TRAIN.STAGE and model.arch_type in config file")
+
+    model_chkpt_id = chkpoint_ids[cfg.TRAIN.STAGE][cfg.model.arch_type]
+    print(cfg.TRAIN.STAGE, cfg.model.arch_type)
+    model_url = f'{drive_prior}{model_chkpt_id}'
+    model_filename = f'./checkpoints/{cfg.TRAIN.STAGE}_{cfg.model.arch_type}.ckpt'
+    if not(os.path.exists(model_filename)):
+        gdown.download(model_url, model_filename)
+    cfg.TEST.CHECKPOINTS = model_filename
+    print('Modified test checkpoint', cfg.TEST.CHECKPOINTS)
 
     if cfg.DEMO.EXAMPLE:
         # Check txt file input
