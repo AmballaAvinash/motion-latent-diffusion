@@ -51,9 +51,8 @@ def main():
             "dense": "1hd2tN1X8HGt6IEULT0-wXbqYtNHf9tFY"
         },
         "WGAN": {
-            "basic": "",
-            "dense": "",
-            "mlp": ""
+            "basic": "1K0PJx8jOkV1ypds2NDDXhObey42XP3QX",
+            "dense": "1hd2tN1X8HGt6IEULT0-wXbqYtNHf9tFY",
         },
         "WGANGP": {
             "basic": "1rrwiOW2dib6nuMVvmo95iydGmUy9lKop"
@@ -74,9 +73,9 @@ def main():
     model_filename = f'./checkpoints/{cfg.TRAIN.STAGE}_{cfg.model.arch_type}.ckpt'
     if not(os.path.exists(model_filename)):
         gdown.download(model_url, model_filename)
-    cfg.TEST.checkpoints = model_filename
-    print('Modified test checkpoint', cfg.TEST.checkpoints)
-    
+    cfg.TEST.CHECKPOINTS = model_filename
+    print('Modified test checkpoint', cfg.TEST.CHECKPOINTS)
+
     if cfg.DEMO.EXAMPLE:
         # Check txt file input
         # load txt

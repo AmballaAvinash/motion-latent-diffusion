@@ -30,7 +30,7 @@ TRAIN:
   END_EPOCH: 1
 
   RESUME: '' #'./experiments/WGANGP/1222_PELearn_GAN_Latent1_MEncDec49_MdiffEnc49_bs64_clip_uncond75_HumanMl/' # Resume GAN training from this path
-  PRETRAINED_VAE: './checkpoints/epoch=1249.ckpt' # vae model path
+  PRETRAINED_VAE: './checkpoints/VAE_HUMAN_ML_epoch=1249.ckpt' # vae model path
   OPTIM:
     TYPE: AdamW # Optimizer type
     LR: 1e-4 # Learning rate
@@ -91,7 +91,7 @@ LOSS:
 #####################################
 model:
   vae: true # whether vae model
-  model_type: WGAN # model type
+  model_type: WGANGP # model type
   arch_type: basic # arch type
   condition: 'text'
   latent_dim: [1, 256] # latent dimension

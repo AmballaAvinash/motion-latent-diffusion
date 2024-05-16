@@ -32,7 +32,7 @@ import torch.utils.data
 
 
 
-class WGAN(BaseModel):
+class WGANGP(BaseModel):
     """
     Stage 1 vae
     Stage 2 wgan

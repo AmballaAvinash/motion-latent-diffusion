@@ -79,7 +79,7 @@ class GAN(BaseModel):
                 self.gan = gan_architecture.CGAN(self.noise_dim, self.text_emb_dim , self.latent_dim[-1])  # text emb dim = 768
             elif self.arch_type == "mlp":
                 self.gan = mlp_gan.CGAN(self.noise_dim, self.text_emb_dim , self.latent_dim[-1])  # text emb dim = 768
-            elif self.arch_tyype == "dense":
+            elif self.arch_type == "dense":
                 self.gan = gan_dense.CGAN(self.noise_dim, self.text_emb_dim , self.latent_dim[-1])  # text emb dim = 768
             else:
                 raise Exception(f'Invalid architecture type for the stage {self.stage}')
