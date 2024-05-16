@@ -46,6 +46,7 @@ class WGAN(BaseModel):
         self.cfg = cfg
 
         self.stage = cfg.TRAIN.STAGE
+        self.architecture = cfg.TRAIN.ARCHITECTURE
         self.condition = cfg.model.condition
         self.is_vae = cfg.model.vae
         self.predict_epsilon = cfg.TRAIN.ABLATION.PREDICT_EPSILON
