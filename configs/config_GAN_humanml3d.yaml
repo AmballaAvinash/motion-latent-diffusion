@@ -20,6 +20,7 @@ DEVICE: [0]
 TRAIN:
   # Model stage. Optional: "vae", "diffusion", "GAN"
   STAGE: GAN
+  ARCHITECTURE: simple  # simple, dense, style
   # Training dataset name
   DATASETS: ['humanml3d']
   # Number of dataloader workers
