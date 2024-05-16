@@ -1,0 +1,370 @@
+2024-05-16 00:18:28,991 SEED_VALUE: 1234
+DEBUG: false
+TRAIN:
+  SPLIT: train
+  NUM_WORKERS: 8
+  BATCH_SIZE: 64
+  START_EPOCH: 0
+  END_EPOCH: 2000
+  RESUME: ''
+  PRETRAINED_VAE: ./experiments/mld/1222_PELearn_VAE_MEncDec49_MdiffEnc49_bs64_clip_uncond75_HumanMl/checkpoints/epoch=1249.ckpt
+  PRETRAINED: ''
+  OPTIM:
+    OPTIM.TYPE: AdamW
+    OPTIM.LR: 0.0001
+    TYPE: AdamW
+    LR: 0.0001
+  ABLATION:
+    VAE_TYPE: actor
+    VAE_ARCH: encoder_decoder
+    PE_TYPE: mld
+    DIFF_PE_TYPE: mld
+    SKIP_CONNECT: true
+    MLP_DIST: false
+    IS_DIST: false
+    PREDICT_EPSILON: true
+  STAGE: GAN
+  DATASETS:
+  - humanml3d
+EVAL:
+  SPLIT: test
+  BATCH_SIZE: 32
+  NUM_WORKERS: 12
+  DATASETS:
+  - humanml3d
+TEST:
+  TEST_DIR: ''
+  CHECKPOINTS: experiments/WGAN/1222_PELearn_WGAN_Latent1_MEncDec49_MdiffEnc49_bs64_clip_uncond75_HumanMl/checkpoints/epoch=249.ckpt
+  SPLIT: test
+  BATCH_SIZE: 1
+  NUM_WORKERS: 12
+  SAVE_PREDICTIONS: false
+  COUNT_TIME: false
+  REPLICATION_TIMES: 20
+  MM_NUM_SAMPLES: 100
+  MM_NUM_REPEATS: 30
+  MM_NUM_TIMES: 10
+  DIVERSITY_TIMES: 300
+  REP_I: 0
+  DATASETS:
+  - humanml3d
+  MEAN: false
+  NUM_SAMPLES: 1
+  FACT: 1
+  FOLDER: ./results
+model:
+  target: modules
+  t2m_textencoder:
+    dim_word: 300
+    dim_pos_ohot: 15
+    dim_text_hidden: 512
+    dim_coemb_hidden: 512
+    target: mld.models.architectures.t2m_textenc.TextEncoderBiGRUCo
+    params:
+      word_size: 300
+      pos_size: 15
+      hidden_size: 512
+      output_size: 512
+  t2m_motionencoder:
+    dim_move_hidden: 512
+    dim_move_latent: 512
+    dim_motion_hidden: 1024
+    dim_motion_latent: 512
+    target: mld.models.architectures.t2m_motionenc.MotionEncoder
+    params:
+      input_size: ${model.t2m_moveencoder.output_size}
+      hidden_size: 1024
+      output_size: 512
+  vae: true
+  model_type: WGAN
+  condition: text
+  latent_dim:
+  - 1
+  - 256
+  ff_size: 1024
+  num_layers: 9
+  num_head: 4
+  droupout: 0.1
+  activation: gelu
+  guidance_scale: 7.5
+  guidance_uncondp: 0.1
+  denoiser:
+    target: mld.models.architectures.mld_denoiser.MldDenoiser
+    params:
+      text_encoded_dim: 768
+      ff_size: 1024
+      num_layers: 9
+      num_heads: 4
+      dropout: 0.1
+      normalize_before: false
+      activation: gelu
+      flip_sin_to_cos: true
+      return_intermediate_dec: false
+      position_embedding: learned
+      arch: trans_enc
+      freq_shift: 0
+      condition: ${model.condition}
+      latent_dim: ${model.latent_dim}
+      guidance_scale: ${model.guidance_scale}
+      guidance_uncondp: ${model.guidance_uncondp}
+      nfeats: ${DATASET.NFEATS}
+      nclasses: ${DATASET.NCLASSES}
+      ablation: ${TRAIN.ABLATION}
+  t2m_moveencoder:
+    target: mld.models.architectures.t2m_textenc.MovementConvEncoder
+    params:
+      hidden_size: 512
+      output_size: 512
+  motion_vae:
+    target: mld.models.architectures.mld_vae.MldVae
+    params:
+      arch: encoder_decoder
+      ff_size: 1024
+      num_layers: 9
+      num_heads: 4
+      dropout: 0.1
+      normalize_before: false
+      activation: gelu
+      position_embedding: learned
+      latent_dim: ${model.latent_dim}
+      nfeats: ${DATASET.NFEATS}
+      ablation: ${TRAIN.ABLATION}
+  scheduler:
+    target: diffusers.DDIMScheduler
+    num_inference_timesteps: 50
+    eta: 0.0
+    params:
+      num_train_timesteps: 1000
+      beta_start: 0.00085
+      beta_end: 0.012
+      beta_schedule: scaled_linear
+      clip_sample: false
+      set_alpha_to_one: false
+      steps_offset: 1
+  noise_scheduler:
+    target: diffusers.DDPMScheduler
+    params:
+      num_train_timesteps: 1000
+      beta_start: 0.00085
+      beta_end: 0.012
+      beta_schedule: scaled_linear
+      variance_type: fixed_small
+      clip_sample: false
+  text_encoder:
+    target: mld.models.architectures.mld_clip.MldTextEncoder
+    params:
+      finetune: false
+      last_hidden_state: false
+      latent_dim: ${model.latent_dim}
+      modelpath: ${model.clip_path}
+  bert_path: ./deps/distilbert-base-uncased
+  clip_path: ./deps/clip-vit-large-patch14
+  t2m_path: ./deps/t2m/t2m
+  humanact12_rec_path: ./deps/actionrecognition
+  uestc_rec_path: ./deps/actionrecognition
+LOSS:
+  LAMBDA_LATENT: 1.0e-05
+  LAMBDA_KL: 0.0001
+  LAMBDA_REC: 1.0
+  LAMBDA_JOINT: 1.0
+  LAMBDA_GEN: 1.0
+  LAMBDA_CROSS: 1.0
+  LAMBDA_CYCLE: 0.0
+  LAMBDA_PRIOR: 0.0
+  DIST_SYNC_ON_STEP: false
+  TYPE: mld
+METRIC:
+  FORCE_IN_METER: true
+  DIST_SYNC_ON_STEP: true
+  TYPE:
+  - TemosMetric
+  - TM2TMetrics
+DATASET:
+  NCLASSES: 10
+  SAMPLER:
+    MAX_SQE: -1
+    MAX_LEN: 196
+    MIN_LEN: 40
+    MAX_TEXT_LEN: 20
+  KIT:
+    PICK_ONE_TEXT: true
+    FRAME_RATE: 12.5
+    UNIT_LEN: 4
+    ROOT: ./datasets/kit-ml/KIT-ML
+    SPLIT_ROOT: ./datasets/kit-ml/KIT-ML
+  HUMANML3D:
+    PICK_ONE_TEXT: true
+    FRAME_RATE: 20.0
+    UNIT_LEN: 4
+    ROOT: ./datasets/HumanML3D
+    SPLIT_ROOT: ./datasets/HumanML3D
+  HUMANACT12:
+    NUM_FRAMES: 60
+    POSE_REP: rot6d
+    GLOB: true
+    TRANSLATION: true
+    ROOT: ./datasets/HumanAct12Poses
+    SPLIT_ROOT: ./datasets/HumanAct12Poses
+  UESTC:
+    NUM_FRAMES: 60
+    POSE_REP: rot6d
+    GLOB: true
+    TRANSLATION: true
+    ROOT: ./datasets/uestc
+    SPLIT_ROOT: ./datasets/uestc
+  JOINT_TYPE: humanml3d
+  SMPL_PATH: ./deps/smpl
+  TRANSFORM_PATH: ./deps/transforms/
+  WORD_VERTILIZER_PATH: ./deps/t2m/glove/
+  AMASS:
+    DB_ROOT: /apdcephfs/share_1227775/shingxchen/uicap/data/vibe_db
+LOGGER:
+  SACE_CHECKPOINT_EPOCH: 50
+  LOG_EVERY_STEPS: 1
+  VAL_EVERY_STEPS: 200
+  TENSORBOARD: true
+  WANDB:
+    OFFLINE: false
+    PROJECT: null
+    RESUME_ID: null
+RENDER:
+  JOINT_TYPE: mmm
+  INPUT_MODE: npy
+  DIR: ''
+  NPY: ''
+  DENOISING: true
+  OLDRENDER: true
+  RES: high
+  DOWNSAMPLE: true
+  FPS: 12.5
+  CANONICALIZE: true
+  EXACT_FRAME: 0.5
+  NUM: 7
+  MODE: sequence
+  VID_EXT: mp4
+  ALWAYS_ON_FLOOR: false
+  GT: false
+  BLENDER_PATH: /apdcephfs/share_1227775/mingzhenzhu/jiangbiao/libs/blender-2.93.2-linux-x64/blender
+  FACES_PATH: /apdcephfs/share_1227775/shingxchen/AIMotion/TMOSTData/deps/smplh/smplh.faces
+  FOLDER: ./animations
+DEMO:
+  MOTION_TRANSFER: false
+  RENDER: false
+  FRAME_RATE: 12.5
+  EXAMPLE: null
+NAME: 1222_PELearn_WGAN_Latent1_MEncDec49_MdiffEnc49_bs64_clip_uncond75_HumanMl
+ACCELERATOR: gpu
+DEVICE:
+- 0
+target: modules
+t2m_textencoder:
+  dim_word: 300
+  dim_pos_ohot: 15
+  dim_text_hidden: 512
+  dim_coemb_hidden: 512
+  target: mld.models.architectures.t2m_textenc.TextEncoderBiGRUCo
+  params:
+    word_size: 300
+    pos_size: 15
+    hidden_size: 512
+    output_size: 512
+t2m_motionencoder:
+  dim_move_hidden: 512
+  dim_move_latent: 512
+  dim_motion_hidden: 1024
+  dim_motion_latent: 512
+  target: mld.models.architectures.t2m_motionenc.MotionEncoder
+  params:
+    input_size: ${model.t2m_moveencoder.output_size}
+    hidden_size: 1024
+    output_size: 512
+vae: true
+model_type: WGAN
+condition: text
+latent_dim:
+- 1
+- 256
+ff_size: 1024
+num_layers: 9
+num_head: 4
+droupout: 0.1
+activation: gelu
+guidance_scale: 7.5
+guidance_uncondp: 0.1
+denoiser:
+  target: mld.models.architectures.mld_denoiser.MldDenoiser
+  params:
+    text_encoded_dim: 768
+    ff_size: 1024
+    num_layers: 9
+    num_heads: 4
+    dropout: 0.1
+    normalize_before: false
+    activation: gelu
+    flip_sin_to_cos: true
+    return_intermediate_dec: false
+    position_embedding: learned
+    arch: trans_enc
+    freq_shift: 0
+    condition: ${model.condition}
+    latent_dim: ${model.latent_dim}
+    guidance_scale: ${model.guidance_scale}
+    guidance_uncondp: ${model.guidance_uncondp}
+    nfeats: ${DATASET.NFEATS}
+    nclasses: ${DATASET.NCLASSES}
+    ablation: ${TRAIN.ABLATION}
+t2m_moveencoder:
+  target: mld.models.architectures.t2m_textenc.MovementConvEncoder
+  params:
+    hidden_size: 512
+    output_size: 512
+motion_vae:
+  target: mld.models.architectures.mld_vae.MldVae
+  params:
+    arch: encoder_decoder
+    ff_size: 1024
+    num_layers: 9
+    num_heads: 4
+    dropout: 0.1
+    normalize_before: false
+    activation: gelu
+    position_embedding: learned
+    latent_dim: ${model.latent_dim}
+    nfeats: ${DATASET.NFEATS}
+    ablation: ${TRAIN.ABLATION}
+scheduler:
+  target: diffusers.DDIMScheduler
+  num_inference_timesteps: 50
+  eta: 0.0
+  params:
+    num_train_timesteps: 1000
+    beta_start: 0.00085
+    beta_end: 0.012
+    beta_schedule: scaled_linear
+    clip_sample: false
+    set_alpha_to_one: false
+    steps_offset: 1
+noise_scheduler:
+  target: diffusers.DDPMScheduler
+  params:
+    num_train_timesteps: 1000
+    beta_start: 0.00085
+    beta_end: 0.012
+    beta_schedule: scaled_linear
+    variance_type: fixed_small
+    clip_sample: false
+text_encoder:
+  target: mld.models.architectures.mld_clip.MldTextEncoder
+  params:
+    finetune: false
+    last_hidden_state: false
+    latent_dim: ${model.latent_dim}
+    modelpath: ${model.clip_path}
+FOLDER: ./results
+FOLDER_EXP: results/WGAN/1222_PELearn_WGAN_Latent1_MEncDec49_MdiffEnc49_bs64_clip_uncond75_HumanMl
+TIME: 2024-05-16-00-18-28
+
+2024-05-16 00:18:29,289 datasets module humanml3d initialized
+2024-05-16 00:19:50,336 model WGAN loaded
+2024-05-16 00:19:50,337 Callbacks initialized
+2024-05-16 00:19:50,469 Loading checkpoints from experiments/WGAN/1222_PELearn_WGAN_Latent1_MEncDec49_MdiffEnc49_bs64_clip_uncond75_HumanMl/checkpoints/epoch=249.ckpt
