@@ -18,7 +18,7 @@ from mld.models.architectures import (
     vposert_vae,
     wgan_architecture,  # Import the basic WGAN, 
     wgan_dense,  # import the dense WGAN
-    wstyle_gan  # style WGAN
+    wmlp_gan  # mlp WGAN
 )
 from mld.models.losses.mld import MLDLosses
 from mld.models.modeltype.base import BaseModel
@@ -37,7 +37,7 @@ import torch.utils.data
 class WGAN(BaseModel):
     """
     Stage 1 vae
-    Stage 2 diffusion/GAN
+    Stage 2 diffusion/WGAN
     """
 
     def __init__(self, cfg, datamodule, **kwargs):
@@ -46,6 +46,7 @@ class WGAN(BaseModel):
         self.cfg = cfg
 
         self.stage = cfg.TRAIN.STAGE
+        self.arch_type = cfg.model.arch_type
         self.condition = cfg.model.condition
         self.is_vae = cfg.model.vae
         self.predict_epsilon = cfg.TRAIN.ABLATION.PREDICT_EPSILON
@@ -75,9 +76,14 @@ class WGAN(BaseModel):
         # Don't train the motion encoder and decoder
         if self.stage == "GAN":
             print("WGAN")
-            # self.gan = wgan_architecture.CGAN(self.noise_dim, self.text_emb_dim , self.latent_dim[-1])  # text emb dim = 768
-            # self.gan = wstyle_gan.CGAN(self.noise_dim, self.text_emb_dim , self.latent_dim[-1])  # text emb dim = 768
-            self.gan = wgan_dense.CGAN(self.noise_dim, self.text_emb_dim , self.latent_dim[-1])  # text emb dim = 768
+            if self.arch_type == "basic":
+                self.gan = wgan_architecture.CGAN(self.noise_dim, self.text_emb_dim , self.latent_dim[-1])  # text emb dim = 768
+            elif self.arch_type == "mlp":
+                self.gan = wmlp_gan.CGAN(self.noise_dim, self.text_emb_dim , self.latent_dim[-1])  # text emb dim = 768
+            elif self.arch_type == "dense":
+                self.gan = wgan_dense.CGAN(self.noise_dim, self.text_emb_dim , self.latent_dim[-1])  # text emb dim = 768
+            else:
+                raise Exception("Invalid architecture type for the stage WGAN")
 
             if self.vae_type in ["mld", "vposert","actor"]:
                 self.vae.training = False
