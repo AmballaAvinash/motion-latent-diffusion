@@ -75,7 +75,7 @@ mld
             - wgangp_basic.py (added this file): Has the simple GAN architecture with Wassestein loss and gradient penalty
 
         -losses: 
-            - mld.py: added lines 50-55, 95-96, 136-139 to handle the stage "GAN"
+            - mld.py: added lines 50-55, 95-96, 136-139 to handle the stage "GAN", "WGAN", "WGANGP"
 
     - train.py -> file in which training VAE or GAN happens.
 
@@ -141,7 +141,7 @@ python -m train --cfg configs/config_vae_humanml3d.yaml --cfg_assets configs/ass
 Ready to train GAN model?
 
 Please update the parameters in configs/config_GAN_kitml.yaml, e.g. NAME, Update the PRETRAINED_VAE to the latest VAE ckpt model path in previous step
-Use TRAIN.STAGE=GAN and model.model_type=GAN for GAN training, WGAN for Wassestein GAN training and WGANGP for Wasserstein GAN-GP respectively.
+Use `TRAIN.STAGE=GAN` and `model.model_type=GAN` for GAN training, `WGAN` for Wassestein GAN training and `WGANGP` for Wasserstein GAN-GP respectively.
 Please note you have to change both parameters for changes to work smoothly.
 
 ```
