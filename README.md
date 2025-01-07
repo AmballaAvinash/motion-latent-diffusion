@@ -1,6 +1,6 @@
-# CS674 Motion Synthesis project
+# LS-GAN: Human Motion Synthesis with Latent-space GANs 
 
-**Instructions to setup the CS674 Motion Synthesis project. This repo has been built on top of the motion-latent-diffusion repo.**
+**Instructions to setup the LS-GAN project. This repo has been built on top of the motion-latent-diffusion repo.**
 <details>
 <summary> <b>Install dependencies and dataset </b> </summary>
 
