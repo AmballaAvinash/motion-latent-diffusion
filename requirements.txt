@@ -22,3 +22,4 @@ scikit-image
 spacy
 diffusers
 ftfy
+gdown

@@ -47,11 +47,11 @@ class MLDLosses(Metric):
             # KL loss
             losses.append("kl_motion")
 
-        if self.stage in ["GAN"]:
+        if self.stage in ["GAN", "WGAN", "WGANGP"]:
             losses.append("generator_loss")
             losses.append("discriminator_loss")
             
-        if self.stage not in ["GAN", 'vae', 'diffusion', 'vae_diffusion']:
+        if self.stage not in ["GAN", "WGAN", "WGANGP", 'vae', 'diffusion', 'vae_diffusion']:
             raise ValueError(f"Stage {self.stage} not supported")
 
         losses.append("total")
@@ -133,7 +133,7 @@ class MLDLosses(Metric):
             total += self._update_loss("gen_joints", rs_set['gen_joints_rst'],
                                        rs_set['joints_ref'])
             
-        if self.stage in ["GAN"]:
+        if self.stage in ["GAN", "WGAN", "WGANGP"]:
             # loss
             total += rs_set["discriminator_loss"]
             total += rs_set["generator_loss"]

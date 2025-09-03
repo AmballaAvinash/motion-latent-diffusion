@@ -2,3 +2,19 @@ datasets/
 experiments/
 deps/
 
+/data
+/motion-latent-diffusion
+/HumanML3D
+/misc
+/source-data
+/pose_data
+/joints
+/motionml
+/checkpoints
+/deps
+/**/__pycache__
+*.pyc
+/experiments
+/results
+/motionml_kit
+/datasets

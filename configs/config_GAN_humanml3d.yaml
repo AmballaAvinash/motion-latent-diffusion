@@ -28,7 +28,7 @@ TRAIN:
   # Size of batches
   BATCH_SIZE: 64
   # Total epochs for training
-  END_EPOCH: 2000
+  END_EPOCH: 2
 
   RESUME: './experiments/GAN/1223_PELearn_DenseGAN_Latent1_MEncDec49_MdiffEnc49_bs64_clip_uncond75_HumanMl/' #'./experiments/GAN/1222_PELearn_GAN_Latent1_MEncDec49_MdiffEnc49_bs64_clip_uncond75_HumanMl/' # Resume GAN training from this path
   PRETRAINED_VAE: './experiments/mld/1222_PELearn_VAE_MEncDec49_MdiffEnc49_bs64_clip_uncond75_HumanMl/checkpoints/epoch=1249.ckpt' # vae model path
@@ -107,7 +107,7 @@ model:
 # The following are loggers settings
 #####################################
 LOGGER:
-  SACE_CHECKPOINT_EPOCH: 50
+  SACE_CHECKPOINT_EPOCH: 200
   LOG_EVERY_STEPS: 1
   VAL_EVERY_STEPS: 200
   TENSORBOARD: True

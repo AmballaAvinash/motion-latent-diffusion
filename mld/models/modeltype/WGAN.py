@@ -18,7 +18,7 @@ from mld.models.architectures import (
     vposert_vae,
     wgan_architecture,  # Import the basic WGAN, 
     wgan_dense,  # import the dense WGAN
-    wstyle_gan  # style WGAN
+    wmlp_gan  # mlp WGAN
 )
 from mld.models.losses.mld import MLDLosses
 from mld.models.modeltype.base import BaseModel
@@ -38,7 +38,7 @@ import torch.utils.data
 class WGAN(BaseModel):
     """
     Stage 1 vae
-    Stage 2 diffusion/GAN
+    Stage 2 diffusion/WGAN
     """
 
     def __init__(self, cfg, datamodule, **kwargs):
@@ -47,7 +47,7 @@ class WGAN(BaseModel):
         self.cfg = cfg
 
         self.stage = cfg.TRAIN.STAGE
-        self.architecture = cfg.TRAIN.ARCHITECTURE
+        self.arch_type = cfg.model.arch_type
         self.condition = cfg.model.condition
         self.is_vae = cfg.model.vae
         self.predict_epsilon = cfg.TRAIN.ABLATION.PREDICT_EPSILON
@@ -860,7 +860,7 @@ class WGAN(BaseModel):
                 # uncond random sample
                 z = torch.randn_like(z)
             
-        elif self.stage == "GAN":
+        elif self.stage == "WGAN":
             text_emb = self.text_encoder(texts)
             noise = torch.randn((len(lengths), self.noise_dim), device=text_emb.device, dtype=torch.float)
             
@@ -1072,7 +1072,7 @@ class WGAN(BaseModel):
                     "lat_t": t2m_rs_set["lat_t"],
                 }
                 
-            elif self.stage=="GAN":
+            elif self.stage=="WGAN":
                 rs_set = self.train_gan_forward(batch)
                 
                 # d_loss = gan_rs_set["discriminator_loss"]
