@@ -55,7 +55,7 @@ TEST:
   CHECKPOINTS: "experiments/mld/1222_PELearn_Diff_Latent1_MEncDec49_MdiffEnc49_bs64_clip_uncond75_01/checkpoints/epoch=1199.ckpt" #./checkpoints/mld_kit_checkpoint/1222_mld_kit_FID041.ckpt # Pretrained MLD model path
   DATASETS: ['kit'] # training datasets
   SPLIT: test
-  BATCH_SIZE: 1 # training Batch size
+  BATCH_SIZE: 2048 # training Batch size
   MEAN: False
   NUM_SAMPLES: 1
   FACT: 1

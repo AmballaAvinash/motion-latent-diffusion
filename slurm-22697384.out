@@ -1,0 +1,13 @@
+Loading miniconda version 22.11.1-1
+Traceback (most recent call last):
+  File "/work/pi_dhruveshpate_umass_edu/aamballa_umass_edu/.conda/envs/674_IVC/lib/python3.9/runpy.py", line 197, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/work/pi_dhruveshpate_umass_edu/aamballa_umass_edu/.conda/envs/674_IVC/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/work/pi_dhruveshpate_umass_edu/aamballa_umass_edu/IVC/motion-latent-diffusion/train.py", line 213, in <module>
+    main()
+  File "/work/pi_dhruveshpate_umass_edu/aamballa_umass_edu/IVC/motion-latent-diffusion/train.py", line 36, in main
+    checkpoints = sorted(os.listdir(os.path.join(
+  File "/work/pi_dhruveshpate_umass_edu/aamballa_umass_edu/IVC/motion-latent-diffusion/train.py", line 38, in <lambda>
+    key=lambda x: int(x[6:-5]),
+ValueError: invalid literal for int() with base 10: '199-v1'

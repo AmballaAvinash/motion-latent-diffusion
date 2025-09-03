@@ -108,6 +108,13 @@ def main():
 
     state_dict = torch.load(cfg.TEST.CHECKPOINTS,
                             map_location="cpu")["state_dict"]
+    
+    # Filter out THOP-related keys  (comment for WGAN)
+    # state_dict = {
+    #     k: v for k, v in state_dict.items() if not ("total_ops" in k or "total_params" in k)
+    # }
+
+
     model.load_state_dict(state_dict)
 
     all_metrics = {}

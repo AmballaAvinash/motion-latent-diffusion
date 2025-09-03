@@ -4,12 +4,12 @@ TEST:
   FOLDER: './results' # Testing files saving path
 
 DATASET:
-  SMPL_PATH: './deps/smpl'
+  SMPL_PATH: './deps/smpl_models/smpl'   # newly changed 
   TRANSFORM_PATH: './deps/transforms/'
   WORD_VERTILIZER_PATH: './deps/t2m/glove/'
   KIT:
-    ROOT: './datasets/kit-ml/KIT-ML' # KIT directory
-    SPLIT_ROOT: './datasets/kit-ml/KIT-ML' # KIT splits directory
+    ROOT: './datasets/KIT-ML' # KIT directory
+    SPLIT_ROOT: './datasets/KIT-ML' # KIT splits directory
   HUMANML3D:
     ROOT: './datasets/HumanML3D' # HumanML3D directory
     SPLIT_ROOT: './datasets/HumanML3D' # HumanML3D splits directory

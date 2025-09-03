@@ -1,3 +1,10 @@
 50 a man kicks with something or someone with his left leg.
 100 A person is skipping rope.
 100 a person walks backward slowly.
+100 a person walks in a circle to their right. 
+100 a person walking forward with legs wide apart.
+100 a person drinks water. 
+100 a person doing jumping jacks. 
+100 a person jogs straight forward.
+100 a person lifts up their left arm to the side.
+100 a person raised arms up and pull them down. 

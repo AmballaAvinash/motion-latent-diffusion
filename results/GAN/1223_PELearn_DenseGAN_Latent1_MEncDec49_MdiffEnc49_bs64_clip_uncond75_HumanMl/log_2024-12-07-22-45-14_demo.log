@@ -1,0 +1,22 @@
+2024-12-07 22:45:17,545 Loading checkpoints from experiments/GAN/1223_PELearn_DenseGAN_Latent1_MEncDec49_MdiffEnc49_bs64_clip_uncond75_HumanMl/checkpoints/epoch=1199.ckpt
+2024-12-07 22:45:23,274 model GAN loaded
+2024-12-07 22:45:23,897 Motions are generated here:
+results/GAN/1223_PELearn_DenseGAN_Latent1_MEncDec49_MdiffEnc49_bs64_clip_uncond75_HumanMl/samples_2024-12-07-22-45-14/Example_50_batch0_0.npy
+2024-12-07 22:45:23,908 Motions are generated here:
+results/GAN/1223_PELearn_DenseGAN_Latent1_MEncDec49_MdiffEnc49_bs64_clip_uncond75_HumanMl/samples_2024-12-07-22-45-14/Example_100_batch0_1.npy
+2024-12-07 22:45:23,918 Motions are generated here:
+results/GAN/1223_PELearn_DenseGAN_Latent1_MEncDec49_MdiffEnc49_bs64_clip_uncond75_HumanMl/samples_2024-12-07-22-45-14/Example_100_batch0_2.npy
+2024-12-07 22:45:23,930 Motions are generated here:
+results/GAN/1223_PELearn_DenseGAN_Latent1_MEncDec49_MdiffEnc49_bs64_clip_uncond75_HumanMl/samples_2024-12-07-22-45-14/Example_100_batch0_3.npy
+2024-12-07 22:45:23,941 Motions are generated here:
+results/GAN/1223_PELearn_DenseGAN_Latent1_MEncDec49_MdiffEnc49_bs64_clip_uncond75_HumanMl/samples_2024-12-07-22-45-14/Example_100_batch0_4.npy
+2024-12-07 22:45:23,960 Motions are generated here:
+results/GAN/1223_PELearn_DenseGAN_Latent1_MEncDec49_MdiffEnc49_bs64_clip_uncond75_HumanMl/samples_2024-12-07-22-45-14/Example_100_batch0_5.npy
+2024-12-07 22:45:23,972 Motions are generated here:
+results/GAN/1223_PELearn_DenseGAN_Latent1_MEncDec49_MdiffEnc49_bs64_clip_uncond75_HumanMl/samples_2024-12-07-22-45-14/Example_100_batch0_6.npy
+2024-12-07 22:45:23,981 Motions are generated here:
+results/GAN/1223_PELearn_DenseGAN_Latent1_MEncDec49_MdiffEnc49_bs64_clip_uncond75_HumanMl/samples_2024-12-07-22-45-14/Example_100_batch0_7.npy
+2024-12-07 22:45:23,990 Motions are generated here:
+results/GAN/1223_PELearn_DenseGAN_Latent1_MEncDec49_MdiffEnc49_bs64_clip_uncond75_HumanMl/samples_2024-12-07-22-45-14/Example_100_batch0_8.npy
+2024-12-07 22:45:24,002 Motions are generated here:
+results/GAN/1223_PELearn_DenseGAN_Latent1_MEncDec49_MdiffEnc49_bs64_clip_uncond75_HumanMl/samples_2024-12-07-22-45-14/Example_100_batch0_9.npy

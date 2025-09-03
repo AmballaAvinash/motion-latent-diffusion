@@ -1,0 +1,11 @@
+Loading miniconda version 22.11.1-1
+Traceback (most recent call last):
+  File "/work/pi_dhruveshpate_umass_edu/aamballa_umass_edu/.conda/envs/674_IVC/lib/python3.9/runpy.py", line 197, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/work/pi_dhruveshpate_umass_edu/aamballa_umass_edu/.conda/envs/674_IVC/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/work/pi_dhruveshpate_umass_edu/aamballa_umass_edu/IVC/motion-latent-diffusion/train.py", line 213, in <module>
+    main()
+  File "/work/pi_dhruveshpate_umass_edu/aamballa_umass_edu/IVC/motion-latent-diffusion/train.py", line 30, in main
+    file_list = sorted(os.listdir(resume), reverse=True)
+NotADirectoryError: [Errno 20] Not a directory: './experiments/mld/1222_PELearn_VAE_MEncDec49_MdiffEnc49_bs64_clip_uncond75_01/checkpoints/epoch=1599.ckpt'

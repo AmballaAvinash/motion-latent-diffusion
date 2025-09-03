@@ -1,0 +1,102 @@
+{
+    "Metrics/APE_root/mean": 504.5423583984375,
+    "Metrics/APE_root/conf_interval": 0.0,
+    "Metrics/APE_traj/mean": 478.1050109863281,
+    "Metrics/APE_traj/conf_interval": 0.0,
+    "Metrics/APE_mean_pose/mean": 163.77230834960938,
+    "Metrics/APE_mean_pose/conf_interval": 0.0,
+    "Metrics/APE_mean_joints/mean": 518.5545654296875,
+    "Metrics/APE_mean_joints/conf_interval": 0.0,
+    "Metrics/AVE_root/mean": 202047.328125,
+    "Metrics/AVE_root/conf_interval": 0.0,
+    "Metrics/AVE_traj/mean": 201409.71875,
+    "Metrics/AVE_traj/conf_interval": 0.0,
+    "Metrics/AVE_mean_pose/mean": 15595.8720703125,
+    "Metrics/AVE_mean_pose/conf_interval": 0.0,
+    "Metrics/AVE_mean_joints/mean": 218920.15625,
+    "Metrics/AVE_mean_joints/conf_interval": 0.0,
+    "Metrics/Matching_score/mean": 6.363590240478516,
+    "Metrics/Matching_score/conf_interval": 0.0,
+    "Metrics/gt_Matching_score/mean": 2.699989080429077,
+    "Metrics/gt_Matching_score/conf_interval": 0.0,
+    "Metrics/R_precision_top_1/mean": 0.1964285671710968,
+    "Metrics/R_precision_top_1/conf_interval": 0.0,
+    "Metrics/R_precision_top_2/mean": 0.306547611951828,
+    "Metrics/R_precision_top_2/conf_interval": 0.0,
+    "Metrics/R_precision_top_3/mean": 0.4032738208770752,
+    "Metrics/R_precision_top_3/conf_interval": 0.0,
+    "Metrics/gt_R_precision_top_1/mean": 0.4196428656578064,
+    "Metrics/gt_R_precision_top_1/conf_interval": 0.0,
+    "Metrics/gt_R_precision_top_2/mean": 0.648809552192688,
+    "Metrics/gt_R_precision_top_2/conf_interval": 0.0,
+    "Metrics/gt_R_precision_top_3/mean": 0.7901785969734192,
+    "Metrics/gt_R_precision_top_3/conf_interval": 0.0,
+    "Metrics/FID/mean": 10.569375038146973,
+    "Metrics/FID/conf_interval": 0.0,
+    "Metrics/Diversity/mean": 9.156440734863281,
+    "Metrics/Diversity/conf_interval": 0.0,
+    "Metrics/gt_Diversity/mean": 10.551054954528809,
+    "Metrics/gt_Diversity/conf_interval": 0.0,
+    "Metrics/MultiModality/mean": 2.843583583831787,
+    "Metrics/MultiModality/conf_interval": 0.0,
+    "Metrics/APE_root": [
+        504.5423583984375
+    ],
+    "Metrics/APE_traj": [
+        478.1050109863281
+    ],
+    "Metrics/APE_mean_pose": [
+        163.77230834960938
+    ],
+    "Metrics/APE_mean_joints": [
+        518.5545654296875
+    ],
+    "Metrics/AVE_root": [
+        202047.328125
+    ],
+    "Metrics/AVE_traj": [
+        201409.71875
+    ],
+    "Metrics/AVE_mean_pose": [
+        15595.8720703125
+    ],
+    "Metrics/AVE_mean_joints": [
+        218920.15625
+    ],
+    "Metrics/Matching_score": [
+        6.363590240478516
+    ],
+    "Metrics/gt_Matching_score": [
+        2.699989080429077
+    ],
+    "Metrics/R_precision_top_1": [
+        0.1964285671710968
+    ],
+    "Metrics/R_precision_top_2": [
+        0.306547611951828
+    ],
+    "Metrics/R_precision_top_3": [
+        0.4032738208770752
+    ],
+    "Metrics/gt_R_precision_top_1": [
+        0.4196428656578064
+    ],
+    "Metrics/gt_R_precision_top_2": [
+        0.648809552192688
+    ],
+    "Metrics/gt_R_precision_top_3": [
+        0.7901785969734192
+    ],
+    "Metrics/FID": [
+        10.569375038146973
+    ],
+    "Metrics/Diversity": [
+        9.156440734863281
+    ],
+    "Metrics/gt_Diversity": [
+        10.551054954528809
+    ],
+    "Metrics/MultiModality": [
+        2.843583583831787
+    ]
+}

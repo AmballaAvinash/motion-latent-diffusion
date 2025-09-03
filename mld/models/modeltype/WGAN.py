@@ -23,6 +23,7 @@ from mld.models.architectures import (
 from mld.models.losses.mld import MLDLosses
 from mld.models.modeltype.base import BaseModel
 from mld.utils.temos_utils import remove_padding
+from thop import profile, clever_format
 
 from .base import BaseModel
 
@@ -59,6 +60,8 @@ class WGAN(BaseModel):
         self.datamodule = datamodule
         self.noise_dim = 100
         self.text_emb_dim = 768
+        self.action_dim = 10
+        self.num_actions = 12
                 
         print(self.latent_dim)
 
@@ -74,13 +77,16 @@ class WGAN(BaseModel):
             self.vae = instantiate_from_config(cfg.model.motion_vae)
 
         # Don't train the motion encoder and decoder
-        if self.stage == "GAN":            
+        if self.stage == "GAN":  
             if self.architecture == "simple":
                 print("Loading simple WGAN")
                 self.gan = wgan_architecture.CGAN(self.noise_dim, self.text_emb_dim , self.latent_dim[-1])  # text emb dim = 768
             elif self.architecture == "dense":
                 print("Loading dense WGAN")
-                self.gan = wgan_dense.CGAN(self.noise_dim, self.text_emb_dim , self.latent_dim[-1])  # text emb dim = 768
+                if self.condition == "action":
+                     self.gan = wgan_dense.CGAN(self.noise_dim, self.action_dim , self.latent_dim[-1], self.num_actions)  # text emb dim = 768
+                else:   
+                     self.gan = wgan_dense.CGAN(self.noise_dim, self.text_emb_dim , self.latent_dim[-1])  # text emb dim = 768
             elif self.architecture == "style":
                 print("Loading style WGAN")
                 self.gan = wstyle_gan.CGAN(self.noise_dim, self.text_emb_dim , self.latent_dim[-1])  # text emb dim = 768
@@ -239,7 +245,14 @@ class WGAN(BaseModel):
     #     return z
 
     def forward(self, batch):
-        texts = batch["text"]
+        if self.condition == 'action':
+                text_emb = batch['text'] # newly a
+                print(text_emb)
+
+        else:
+                texts = batch["text"]
+                text_emb = self.text_encoder(texts)
+
         lengths = batch["length"]
         if self.cfg.TEST.COUNT_TIME:
             self.starttime = time.time()
@@ -260,10 +273,8 @@ class WGAN(BaseModel):
             z, dist_m = self.vae.encode(motions, lengths)
             
         elif self.stage=="GAN":
-                        
-            text_emb = self.text_encoder(texts)
-            
-            noise = torch.randn((len(texts), self.noise_dim), device=text_emb.device, dtype=torch.float)
+                                    
+            noise = torch.randn((len(lengths), self.noise_dim), device=self.text_encoder(["hi"]).device, dtype=torch.float)
             
             
             z = self.gan(noise, text_emb).unsqueeze(0)
@@ -558,7 +569,16 @@ class WGAN(BaseModel):
     def train_gan_forward(self, batch):
         
         motions = batch['motion']
-        texts = batch["text"]
+        if self.condition == 'action':
+                cond_emb = batch['action'] # newly a
+                # print(cond_emb.shape)
+
+        else:
+                texts = batch["text"]
+                cond_emb = self.text_encoder(texts)
+
+
+        
         lengths = batch["length"]
         
         
@@ -575,10 +595,7 @@ class WGAN(BaseModel):
 
         # Sample Gaussian noise
         
-        # Get text embeddings
-        cond_emb = self.text_encoder(texts)
-        
-        noise = torch.randn((len(texts), self.noise_dim), device=cond_emb.device, dtype=torch.float)
+        noise = torch.randn((len(lengths), self.noise_dim), device=cond_emb.device, dtype=torch.float)
                 
         
         
@@ -602,15 +619,19 @@ class WGAN(BaseModel):
     def test_gan_forward(self, batch):
         
         motions = batch['motion']
-        texts = batch["text"]
+        if self.condition == 'action':
+                cond_emb = batch['action'] # newly a
+                # print(cond_emb.shape)
+
+        else:
+                texts = batch["text"]
+                cond_emb = self.text_encoder(texts)
+
         lengths = batch["length"]
                 
                 
-        # Sample Gaussian noise
-        
-        cond_emb = self.text_encoder(texts)
-        
-        noise = torch.randn((len(texts), self.noise_dim), device=cond_emb.device, dtype=torch.float)
+        # Sample Gaussian noise        
+        noise = torch.randn((len(lengths), self.noise_dim), device=cond_emb.device, dtype=torch.float)
         
        
 
@@ -640,7 +661,7 @@ class WGAN(BaseModel):
 
     def training_step(self, batch, batch_idx, optimizer_idx):
         
-        clip_value = 0.01
+        # clip_value = 0.01
         
         gan_rs_set = self.train_gan_forward(batch)
         d_loss = gan_rs_set["discriminator_loss"]
@@ -651,8 +672,8 @@ class WGAN(BaseModel):
             return g_loss
         
         if optimizer_idx == 1:
-            for p in self.gan.discriminator.parameters():
-                p.data.clamp_(-clip_value, clip_value)
+            # for p in self.gan.discriminator.parameters():
+            #     p.data.clamp_(-clip_value, clip_value)
 
 
             self.log("d_loss", d_loss, on_step=True, on_epoch=True, prog_bar=True, logger=True)
@@ -846,6 +867,12 @@ class WGAN(BaseModel):
             
             
             z = self.gan(noise, text_emb).unsqueeze(0)
+
+            # FLOPS
+            # macs1, params1 = profile(self.gan, inputs=(noise, text_emb))
+            # macs1, params1 = clever_format([macs1, params1], "%.3f")
+
+            # print("Total FLOPS {}".format(macs1))  # removed 2 times mac
                     
 
         with torch.no_grad():
@@ -897,66 +924,92 @@ class WGAN(BaseModel):
         }
         return rs_set
 
-    # def a2m_eval(self, batch):
-    #     actions = batch["action"]
-    #     actiontexts = batch["action_text"]
-    #     motions = batch["motion"].detach().clone()
-    #     lengths = batch["length"]
+    def a2m_eval(self, batch):
+        actions = batch["action"]
+        actiontexts = batch["action_text"]
+        motions = batch["motion"].detach().clone()
+        lengths = batch["length"]
 
-    #     if self.do_classifier_free_guidance:
-    #         cond_emb = torch.cat((torch.zeros_like(actions), actions))
+        if self.do_classifier_free_guidance:
+            cond_emb = torch.cat((torch.zeros_like(actions), actions))
 
-    #     if self.stage in ['diffusion', 'vae_diffusion']:
-    #         z = self._diffusion_reverse(cond_emb, lengths)
-    #     elif self.stage in ['vae']:
-    #         if self.vae_type in ["mld", "vposert","actor"]:
-    #             z, dist_m = self.vae.encode(motions, lengths)
-    #         else:
-    #             raise TypeError("vae_type must be mcross or actor")
+        if self.stage in ['diffusion', 'vae_diffusion']:
+            z = self._diffusion_reverse(cond_emb, lengths)
+        elif self.stage in ['vae']:
+            if self.vae_type in ["mld", "vposert","actor"]:
+                z, dist_m = self.vae.encode(motions, lengths)
+            else:
+                raise TypeError("vae_type must be mcross or actor")
+            
+        elif self.stage == "GAN":
+            text_emb = actions
+            noise = torch.randn((len(lengths), self.noise_dim), device=text_emb.device, dtype=torch.float)
+            
+            
+            
+            z = self.gan(noise, text_emb).unsqueeze(0)
 
-    #     with torch.no_grad():
-    #         if self.vae_type in ["mld", "vposert","actor"]:
-    #             feats_rst = self.vae.decode(z, lengths)
-    #         elif self.vae_type == "no":
-    #             feats_rst = z.permute(1, 0, 2)
-    #         else:
-    #             raise TypeError("vae_type must be mcross or actor or mld")
+            # FLOPS
+            # macs1, params1 = profile(self.gan, inputs=(noise, text_emb))
+            # macs1, params1 = clever_format([macs1, params1], "%.3f")
 
-    #     mask = batch["mask"]
-    #     joints_rst = self.feats2joints(feats_rst, mask)
-    #     joints_ref = self.feats2joints(motions, mask)
-    #     joints_eval_rst = self.feats2joints_eval(feats_rst, mask)
-    #     joints_eval_ref = self.feats2joints_eval(motions, mask)
+            # print("Total FLOPS {}".format(macs1))  # removed 2 times mac
 
-    #     rs_set = {
-    #         "m_action": actions,
-    #         "m_ref": motions,
-    #         "m_rst": feats_rst,
-    #         "m_lens": lengths,
-    #         "joints_rst": joints_rst,
-    #         "joints_ref": joints_ref,
-    #         "joints_eval_rst": joints_eval_rst,
-    #         "joints_eval_ref": joints_eval_ref,
-    #     }
-    #     return rs_set
+        with torch.no_grad():
+            if self.vae_type in ["mld", "vposert","actor"]:
+                feats_rst = self.vae.decode(z, lengths)
+            elif self.vae_type == "no":
+                feats_rst = z.permute(1, 0, 2)
+            else:
+                raise TypeError("vae_type must be mcross or actor or mld")
 
-    # def a2m_gt(self, batch):
-    #     actions = batch["action"]
-    #     actiontexts = batch["action_text"]
-    #     motions = batch["motion"].detach().clone()
-    #     lengths = batch["length"]
-    #     mask = batch["mask"]
+        mask = batch["mask"]
+        joints_rst = self.feats2joints(feats_rst, mask)
+        joints_ref = self.feats2joints(motions, mask)
+        joints_eval_rst = self.feats2joints_eval(feats_rst, mask)
+        joints_eval_ref = self.feats2joints_eval(motions, mask)
 
-    #     joints_ref = self.feats2joints(motions.to('cuda'), mask.to('cuda'))
+        rs_set = {
+            "m_action": actions,
+            "m_ref": motions,
+            "m_rst": feats_rst,
+            "m_lens": lengths,
+            "joints_rst": joints_rst,
+            "joints_ref": joints_ref,
+            "joints_eval_rst": joints_eval_rst,
+            "joints_eval_ref": joints_eval_ref,
+        }
+        return rs_set
 
-    #     rs_set = {
-    #         "m_action": actions,
-    #         "m_text": actiontexts,
-    #         "m_ref": motions,
-    #         "m_lens": lengths,
-    #         "joints_ref": joints_ref,
-    #     }
-    #     return rs_set
+
+    def tsne(self, texts, lengths):
+        
+        text_emb = self.text_encoder(texts)
+        noise = torch.randn((len(lengths), self.noise_dim), device=text_emb.device, dtype=torch.float)
+                    
+        z = self.gan(noise, text_emb).unsqueeze(0)
+
+        return z 
+               
+    
+
+    def a2m_gt(self, batch):
+        actions = batch["action"]
+        actiontexts = batch["action_text"]
+        motions = batch["motion"].detach().clone()
+        lengths = batch["length"]
+        mask = batch["mask"]
+
+        joints_ref = self.feats2joints(motions.to('cuda'), mask.to('cuda'))
+
+        rs_set = {
+            "m_action": actions,
+            "m_text": actiontexts,
+            "m_ref": motions,
+            "m_lens": lengths,
+            "joints_ref": joints_ref,
+        }
+        return rs_set
 
     # def eval_gt(self, batch, renoem=True):
     #     motions = batch["motion"].detach().clone()
@@ -1048,6 +1101,7 @@ class WGAN(BaseModel):
             elif self.condition == 'action':
                 # use a2m evaluators
                 rs_set = self.a2m_eval(batch)
+
             # MultiModality evaluation sperately
             if self.trainer.datamodule.is_mm:
                 metrics_dicts = ['MMMetrics']

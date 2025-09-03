@@ -7,6 +7,8 @@ from torch import Tensor
 from torch.optim import AdamW
 from torchmetrics import MetricCollection
 import time
+from thop import profile, clever_format
+
 from mld.config import instantiate_from_config
 from os.path import join as pjoin
 from mld.models.architectures import (
@@ -267,12 +269,15 @@ class GAN(BaseModel):
             
             
             z = self.gan(noise, text_emb).unsqueeze(0)
-            
+
+
 
         with torch.no_grad():
             # ToDo change mcross actor to same api
             if self.vae_type in ["mld","actor"]:
                 feats_rst = self.vae.decode(z, lengths)
+
+
             elif self.vae_type == "no":
                 feats_rst = z.permute(1, 0, 2)
 
@@ -841,9 +846,16 @@ class GAN(BaseModel):
             z = self.gan(noise, text_emb).unsqueeze(0)
                     
 
+            # FLOPS
+            macs1, params1 = profile(self.gan, inputs=(noise, text_emb))
+            macs1, params1 = clever_format([macs1, params1], "%.3f")
+
+            print("Total FLOPS {}".format(macs1))  # eliminate 2
+
         with torch.no_grad():
             if self.vae_type in ["mld", "vposert", "actor"]:
                 feats_rst = self.vae.decode(z, lengths)
+
             elif self.vae_type == "no":
                 feats_rst = z.permute(1, 0, 2)
 
@@ -890,6 +902,15 @@ class GAN(BaseModel):
         }
         return rs_set
 
+    def tsne(self, texts, lengths):
+        
+        text_emb = self.text_encoder(texts)
+        noise = torch.randn((len(lengths), self.noise_dim), device=text_emb.device, dtype=torch.float)
+                    
+        z = self.gan(noise, text_emb).unsqueeze(0)
+
+        return z 
+               
     # def a2m_eval(self, batch):
     #     actions = batch["action"]
     #     actiontexts = batch["action_text"]

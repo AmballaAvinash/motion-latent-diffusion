@@ -147,6 +147,12 @@ def main():
     #     #     new_state_dict[k] = v
     # model.load_state_dict(new_state_dict, strict=False)
 
+
+    # state_dict = {
+    #     k: v for k, v in state_dict.items() if not ("total_ops" in k or "total_params" in k)
+    # }
+
+
     model.load_state_dict(state_dict, strict=True)
 
     logger.info("model {} loaded".format(cfg.model.model_type))

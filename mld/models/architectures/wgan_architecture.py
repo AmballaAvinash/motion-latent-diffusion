@@ -125,9 +125,40 @@ class CGAN(pl.LightningModule):
     fake_pred = torch.squeeze(self.discriminator(fake_latent, text_emb))
 
 
-    d_loss = torch.mean(fake_pred) - torch.mean(real_pred)
+    lambda_gp = 10  # Gradient penalty coefficient
+    gp = self.gradient_penalty(fake_latent, x, text_emb) 
+    d_loss = torch.mean(fake_pred) - torch.mean(real_pred) + lambda_gp * gp
     return d_loss
 
+  def gradient_penalty(self, fake_pred, real_pred, text_emb):
+      batch_size = real_pred.size(0)
+      alpha = torch.rand(batch_size, 1).to(real_pred.device)
+      alpha = alpha.expand_as(real_pred)
+
+      interpolates = alpha * real_pred + ((1 - alpha) * fake_pred)
+      # interpolates.requires_grad_(True)
+      interpolates.requires_grad = True
+
+      # print(interpolates)
+
+      interpolated_score = self.discriminator(interpolates, text_emb)
+      interpolated_score.requires_grad_(True)
+
+      # print(interpolated_score)
+      gradients = torch.autograd.grad(
+          outputs=interpolated_score,
+          inputs=interpolates,
+          grad_outputs=torch.ones_like(interpolated_score),
+          create_graph=True,
+          retain_graph=True,
+          materialize_grads=True,
+      )[0]
+
+
+      gradients = gradients.view(gradients.size(0), -1)
+      gradient_norm = gradients.norm(2, dim=1)
+      gradient_penalty = ((gradient_norm - 1) ** 2).mean()
+      return gradient_penalty
     
   def configure_optimizers(self):
       

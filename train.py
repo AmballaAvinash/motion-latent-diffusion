@@ -140,6 +140,8 @@ def main():
     else:
         ddp_strategy = None
 
+    # ddp_strategy = None # newly added (comment for WGAN)
+
     # trainer
     trainer = pl.Trainer(
         benchmark=False,

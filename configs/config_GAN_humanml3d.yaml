@@ -3,7 +3,7 @@
 ####################################
 
 # Experiment name, more details in Section 'Experiment Name Explanation'
-NAME: 1222_PELearn_WDenseGAN_Latent1_MEncDec49_MdiffEnc49_bs64_clip_uncond75_HumanMl # 1222_PELearn_GAN_Latent1_MEncDec49_MdiffEnc49_bs64_clip_uncond75_HumanMl
+NAME: 1222_PELearn_GAN_Latent1_MEncDec49_MdiffEnc49_bs64_clip_uncond75_HumanMl # 1222_PELearn_GAN_Latent1_MEncDec49_MdiffEnc49_bs64_clip_uncond75_HumanMl
 # Debug mode. Set to True will enter the debug mode, then the program will
 # 1. use a tiny dataset for trianing and evaluation
 # 2. validate more intensively
@@ -20,7 +20,7 @@ DEVICE: [0]
 TRAIN:
   # Model stage. Optional: "vae", "diffusion", "GAN"
   STAGE: GAN
-  ARCHITECTURE: dense  # simple, dense, style
+  ARCHITECTURE: simple  # simple, dense, style
   # Training dataset name
   DATASETS: ['humanml3d']
   # Number of dataloader workers
@@ -30,7 +30,7 @@ TRAIN:
   # Total epochs for training
   END_EPOCH: 2000
 
-  RESUME: '' #'./experiments/GAN/1222_PELearn_GAN_Latent1_MEncDec49_MdiffEnc49_bs64_clip_uncond75_HumanMl/' # Resume GAN training from this path
+  RESUME: './experiments/GAN/1223_PELearn_DenseGAN_Latent1_MEncDec49_MdiffEnc49_bs64_clip_uncond75_HumanMl/' #'./experiments/GAN/1222_PELearn_GAN_Latent1_MEncDec49_MdiffEnc49_bs64_clip_uncond75_HumanMl/' # Resume GAN training from this path
   PRETRAINED_VAE: './experiments/mld/1222_PELearn_VAE_MEncDec49_MdiffEnc49_bs64_clip_uncond75_HumanMl/checkpoints/epoch=1249.ckpt' # vae model path
   OPTIM:
     TYPE: AdamW # Optimizer type
@@ -53,10 +53,10 @@ EVAL:
 # The following are testing settings
 #####################################
 TEST:
-  CHECKPOINTS: 'experiments/WGAN/1222_PELearn_WDenseGAN_Latent1_MEncDec49_MdiffEnc49_bs64_clip_uncond75_HumanMl/checkpoints/epoch=149.ckpt'  #'./experiments/GAN/1222_PELearn_GAN_Latent1_MEncDec49_MdiffEnc49_bs64_clip_uncond75_HumanMl/checkpoints/epoch=599.ckpt'# Pretrained GAN model path
+  CHECKPOINTS: 'experiments/GAN/1222_PELearn_GAN_Latent1_MEncDec49_MdiffEnc49_bs64_clip_uncond75_HumanMl/checkpoints/epoch=1499.ckpt' #'experiments/WGAN/1222_PELearn_WGAN_Latent1_MEncDec49_MdiffEnc49_bs64_clip_uncond75_HumanMl/checkpoints/epoch=1599.ckpt'  #'./experiments/GAN/1222_PELearn_GAN_Latent1_MEncDec49_MdiffEnc49_bs64_clip_uncond75_HumanMl/checkpoints/epoch=599.ckpt'# Pretrained GAN model path
   DATASETS: ['humanml3d'] # training datasets
   SPLIT: test
-  BATCH_SIZE: 1 # training Batch size
+  BATCH_SIZE: 1 # test Batch size
   MEAN: False
   NUM_SAMPLES: 1
   FACT: 1
@@ -92,7 +92,7 @@ LOSS:
 #####################################
 model:
   vae: true # whether vae model
-  model_type: WGAN # model type
+  model_type: GAN # model type
   condition: 'text'
   latent_dim: [1, 256] # latent dimension
   ff_size: 1024 #

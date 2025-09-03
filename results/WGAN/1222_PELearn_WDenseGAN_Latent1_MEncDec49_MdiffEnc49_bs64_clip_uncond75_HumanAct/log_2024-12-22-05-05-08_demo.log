@@ -1,0 +1,2 @@
+2024-12-22 05:05:10,062 Loading checkpoints from ./experiments/WGAN/1222_PELearn_WDenseGAN_Latent1_MEncDec49_MdiffEnc49_bs64_clip_uncond75_HumanAct/checkpoints/epoch=34599.ckpt
+2024-12-22 05:05:10,305 model WGAN loaded

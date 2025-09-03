@@ -1,0 +1,3 @@
+100 warm_up
+100 walk
+100 jump

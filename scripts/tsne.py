@@ -35,7 +35,7 @@ def data_parse(step: int, latents: np.ndarray, classids: list):
     # (12, 50, 50, 256)
     t_0 = latents[classids,:nsample, step,:]
     t_0 = t_0.reshape(-1, t_0.shape[-1])
-
+    print(t_0.shape)
 
     # labels = np.array(list(range(0,nclass)))
     # labels = labels.repeat(nsample)
@@ -57,7 +57,7 @@ def data_parse(step: int, latents: np.ndarray, classids: list):
     df["comp-2"] = z[:,1]
     return df
 
-def drawFig(output_dir: str, latents: np.ndarray, classids: list = [8,6,5], steps: list = [0, 15, 35, 49] ):
+def drawFig(output_dir: str, latents: np.ndarray, classids: list = [8,6,5], steps: list = [0] ):
     ''' 
     Draw the figure of t-SNE
     Parameters:
@@ -81,19 +81,20 @@ def drawFig(output_dir: str, latents: np.ndarray, classids: list = [8,6,5], step
 
     sns.set()
 
-    fig, axs = plt.subplots(1, 4, figsize=(4*3,2.5))
+    fig, axs = plt.subplots(1, 1, figsize=(2.5,2.5))
 
     nclass = len(classids)
     steps.sort(reverse=True)
     for i, step in enumerate(steps):
         df = data_parse(steps[0]-step,latents,classids)
-        sns.scatterplot(ax=axs[i], x="comp-1", y="comp-2", hue='y',
+        print(df)
+        sns.scatterplot(ax=axs, x="comp-1", y="comp-2", hue='y',
                         legend = False if i != len(steps) -1  else True,
                         palette=sns.color_palette("hls", nclass),
                         data=df).set(title=r"t = {}".format(step)) 
 
-        axs[i].set_xlim((-1, 1))
-        axs[i].set_ylim((-1, 1))
+        axs.set_xlim((-1, 1))
+        axs.set_ylim((-1, 1))
 
     plt.legend(loc=[1.1,0.2], title='Action ID')
 
@@ -144,6 +145,10 @@ def main():
 
     state_dict = torch.load(cfg.TEST.CHECKPOINTS,
                             map_location="cpu")["state_dict"]
+    
+    # state_dict = {
+    #     k: v for k, v in state_dict.items() if not ("total_ops" in k or "total_params" in k)
+    # }
     model.load_state_dict(state_dict)
     model = model.eval()
     
@@ -154,20 +159,40 @@ def main():
     
     # Generate latent codes
     with torch.no_grad():
-        labels = torch.tensor(np.array(list(range(0,dataset.nclasses)))).unsqueeze(1).to(device)
-        lengths = torch.tensor([60]*dataset.nclasses).to(device)
+        # labels = torch.tensor(np.array(list(range(0,dataset.nclasses)))).unsqueeze(1).to(device)
+        # lengths = torch.tensor([60]*dataset.nclasses).to(device)
+
+        # print(labels)
+        # print(lengths)
         z_list = []
-        for i in track(range(50),'Generating latent codes'):
-            cond_emb = torch.cat((torch.zeros_like(labels), labels))
-            # [steps, classes, latent_dim]
-            z = model._diffusion_reverse_tsne(cond_emb, lengths)
-            z_list.append(z)
+        # for i in track(range(50),'Generating latent codes'):
+        #     cond_emb = torch.cat((torch.zeros_like(labels), labels))
+        #     # [steps, classes, latent_dim]
+        #     z = model._diffusion_reverse_tsne(cond_emb, lengths)
+        #     z_list.append(z)
+
+        # cond_emb = torch.cat((torch.zeros_like(labels), labels))
+        # [steps, classes, latent_dim]
+        actions = ["sit", "lift_dumbbell", "turn_steering"]
+
+        # Repeat each element 30 times
+        repeated_actions = [action for action in actions for _ in range(30)]
+
+
+        z = model.tsne(texts = repeated_actions, lengths = [100,100,100]*30)
+        z_list.append(z)
+
         # [samples, steps, classes, latent_dim] -> [classes, samples, steps, latent_dim]
-        latents = torch.stack(z_list, dim=0).permute(2,0,1,3).cpu().numpy()
+        latents = torch.stack(z_list, dim=0)
         print(latents.shape)
         
+        
+        latents = latents.permute(0,2,1,3).cpu().numpy()
+        latents = latents.reshape(3,30,1,256)
+        print(latents.shape)
+
     # Draw figure
-    drawFig(output_dir, latents, classids = [8,6,5], steps = [0, 15, 35, 49])
+    drawFig(output_dir, latents, classids = [0,1,2], steps = [0])
     logger.info("TSNE figure saved to {}".format(output_dir))
 
 if __name__ == "__main__":

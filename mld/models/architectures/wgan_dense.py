@@ -2,111 +2,92 @@ import torch
 import torch.nn as nn
 import pytorch_lightning as pl
 
-class Generator(nn.Module):
-
-    def __init__(self, latent_in, text_in, latent_out):
+class ResidualBlockDense(nn.Module):
+    def __init__(self, in_features, out_features):
         super().__init__()
-        self.latent_in = latent_in
-        self.text_in = text_in
-        self.latent_out = latent_out
+        self.fc1 = nn.Linear(in_features, out_features)
+        self.ln1 = nn.LayerNorm(out_features)
+        self.relu = nn.LeakyReLU(0.2)
+        self.fc2 = nn.Linear(out_features, out_features)
+        self.ln2 = nn.LayerNorm(out_features)
 
-        self.linear1 = nn.Linear(latent_in + text_in, 1024)
-        self.bn1 = nn.BatchNorm1d(1024)
-        self.relu1 = nn.ReLU()
-
-        self.residual_block1 = ResidualBlock(1024, 512)
-        self.residual_block2 = ResidualBlock(512, 256)
-
-        self.linear2 = nn.Linear(256, latent_out)
-
-    def forward(self, z, text_emb):
-        text_emb = text_emb.reshape(text_emb.shape[0], -1)
-        x = torch.cat([z, text_emb], dim=-1)
-
-        x = self.linear1(x)
-        x = self.bn1(x)
-        x = self.relu1(x)
-
-        x = self.residual_block1(x)
-        x = self.residual_block2(x)
-
-        x = self.linear2(x)
-        return x
-
-
-class ResidualBlock(nn.Module):
-    def __init__(self, in_channels, out_channels, stride=1):
-        super().__init__()
-        self.conv1 = nn.Conv1d(in_channels, out_channels, kernel_size=3, stride=stride, padding=1, bias=False)
-        self.bn1 = nn.BatchNorm1d(out_channels)
-        self.relu = nn.ReLU(inplace=True)
-        self.conv2 = nn.Conv1d(out_channels, out_channels, kernel_size=3, stride=1, padding=1, bias=False)
-        self.bn2 = nn.BatchNorm1d(out_channels)
-        self.layer_norm = nn.LayerNorm(out_channels)
-
-        self.shortcut = nn.Sequential()
-        if stride != 1 or in_channels != out_channels:
-            self.shortcut = nn.Sequential(
-                nn.Conv1d(in_channels, out_channels, kernel_size=1, stride=stride, bias=False),
-                nn.BatchNorm1d(out_channels)
-            )
+        self.shortcut = nn.Linear(in_features, out_features) if in_features != out_features else nn.Identity()
 
     def forward(self, x):
-        batch_size, in_channels = x.size()
-        out = self.relu(self.bn1(self.conv1(x.view(batch_size, in_channels, -1))))
-        out = self.bn2(self.conv2(out))
-        out += self.shortcut(x.view(batch_size, in_channels, -1))
-        out = self.layer_norm(out.view(batch_size, -1))
-        out = self.relu(out)
-        return out
-    
-    
-class Discriminator(nn.Module):
-    """
-    Discriminator class in a CGAN. Accepts a tensor of size 784 and
-    a label tensor as input, and outputs a tensor of size 1,
-    with the predicted class probabilities (generated or real data)
-    """
+        shortcut = self.shortcut(x)
+        x = self.relu(self.ln1(self.fc1(x)))
+        x = self.ln2(self.fc2(x))
+        return self.relu(x + shortcut)
 
-    def __init__(self, latent_in, text_in, latent_out):
+
+class Generator(nn.Module):
+    def __init__(self, latent_in, text_in, latent_out, num_actions = None):
         super().__init__()
-        self.latent_in = latent_in
-        self.text_in = text_in
-        self.latent_out = latent_out
+        self.layer1 = nn.Sequential(
+            nn.Linear(latent_in + text_in, 1024),
+            nn.LayerNorm(1024),
+            nn.LeakyReLU(0.2),
+        )
+        self.residual_block1 = ResidualBlockDense(1024, 512)
+        self.residual_block2 = ResidualBlockDense(512, 256)
+        self.output = nn.Linear(256, latent_out)
+        self.num_actions = num_actions
+        if self.num_actions is not None:
+           self.embedding = nn.Embedding(num_actions, text_in)
 
-        self.linear1 = nn.Linear(latent_out + text_in, 1024)
-        self.bn1 = nn.BatchNorm1d(1024)
-        self.relu1 = nn.ReLU()
 
-        self.residual_block1 = ResidualBlock(1024, 512)
-        self.residual_block2 = ResidualBlock(512, 256)
+    def forward(self, z, text_emb):
+        if self.num_actions is not None:
+           text_emb = self.embedding(text_emb)
 
-        self.linear2 = nn.Linear(256, 1)
-
-    def forward(self, x, text_emb):
         text_emb = text_emb.reshape(text_emb.shape[0], -1)
-        x = torch.cat([x, text_emb], dim=-1)
-
-        x = self.linear1(x)
-        x = self.bn1(x)
-        x = self.relu1(x)
-
+        x = torch.cat([z, text_emb], dim=-1)
+        x = self.layer1(x)
         x = self.residual_block1(x)
         x = self.residual_block2(x)
-
-        x = self.linear2(x)
+        x = self.output(x)
         return x
+
+
+class Discriminator(nn.Module):
+    def __init__(self, latent_in, text_in, latent_out, num_actions = None):
+        super().__init__()
+        self.layer1 = nn.Sequential(
+            nn.Linear(latent_out + text_in, 1024),
+            nn.LayerNorm(1024),
+            nn.LeakyReLU(0.2),
+        )
+        self.residual_block1 = ResidualBlockDense(1024, 512)
+        self.residual_block2 = ResidualBlockDense(512, 256)
+        self.output = nn.Linear(256, 1)
+        self.num_actions = num_actions
+        if self.num_actions is not None:
+           self.embedding = nn.Embedding(num_actions, text_in)
+
+
+    def forward(self, x, text_emb):
+        if self.num_actions is not None:
+           text_emb = self.embedding(text_emb)
+
+        text_emb = text_emb.reshape(text_emb.shape[0], -1)
+        x = torch.cat([x, text_emb], dim=-1)
+        x = self.layer1(x)
+        x = self.residual_block1(x)
+        x = self.residual_block2(x)
+        x = self.output(x)
+        return x
+
     
     
 class CGAN(pl.LightningModule):
 
-  def __init__(self, latent_in_dim, text_emb_dim, latent_out_dim):
+  def __init__(self, latent_in_dim, text_emb_dim, latent_out_dim, num_actions = None):
     super().__init__()
     self.latent_in_dim = latent_in_dim
     self.text_emb_dim = text_emb_dim
     self.latent_out_dim = latent_out_dim
-    self.generator = Generator(latent_in_dim, text_emb_dim, latent_out_dim)
-    self.discriminator = Discriminator(latent_in_dim, text_emb_dim, latent_out_dim)
+    self.generator = Generator(latent_in_dim, text_emb_dim, latent_out_dim, num_actions)
+    self.discriminator = Discriminator(latent_in_dim, text_emb_dim, latent_out_dim, num_actions)
     self.BCE_loss = nn.BCELoss()
 
   def forward(self, z, text_emb):
@@ -160,10 +141,41 @@ class CGAN(pl.LightningModule):
     fake_pred = torch.squeeze(self.discriminator(fake_latent, text_emb))
 
 
-    d_loss = torch.mean(fake_pred) - torch.mean(real_pred)
+    lambda_gp = 10  # Gradient penalty coefficient
+    gp = self.gradient_penalty(fake_latent, x, text_emb) 
+    d_loss = torch.mean(fake_pred) - torch.mean(real_pred) + lambda_gp * gp
     return d_loss
 
-    
+  def gradient_penalty(self, fake_pred, real_pred, text_emb):
+      batch_size = real_pred.size(0)
+      alpha = torch.rand(batch_size, 1).to(real_pred.device)
+      alpha = alpha.expand_as(real_pred)
+
+      interpolates = alpha * real_pred + ((1 - alpha) * fake_pred)
+      # interpolates.requires_grad_(True)
+      interpolates.requires_grad = True
+
+      # print(interpolates)
+
+      interpolated_score = self.discriminator(interpolates, text_emb)
+      interpolated_score.requires_grad_(True)
+
+      # print(interpolated_score)
+      gradients = torch.autograd.grad(
+          outputs=interpolated_score,
+          inputs=interpolates,
+          grad_outputs=torch.ones_like(interpolated_score),
+          create_graph=True,
+          retain_graph=True,
+          materialize_grads=True,
+      )[0]
+
+
+      gradients = gradients.view(gradients.size(0), -1)
+      gradient_norm = gradients.norm(2, dim=1)
+      gradient_penalty = ((gradient_norm - 1) ** 2).mean()
+      return gradient_penalty
+   
   def configure_optimizers(self):
       
     g_optimizer = torch.optim.Adam(self.generator.parameters(), lr=0.0002)

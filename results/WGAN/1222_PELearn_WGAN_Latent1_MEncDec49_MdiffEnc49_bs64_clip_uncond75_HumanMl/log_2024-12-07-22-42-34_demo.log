@@ -1,0 +1,22 @@
+2024-12-07 22:42:37,427 Loading checkpoints from experiments/WGAN/1222_PELearn_WGAN_Latent1_MEncDec49_MdiffEnc49_bs64_clip_uncond75_HumanMl/checkpoints/epoch=1599.ckpt
+2024-12-07 22:42:42,786 model WGAN loaded
+2024-12-07 22:42:43,422 Motions are generated here:
+results/WGAN/1222_PELearn_WGAN_Latent1_MEncDec49_MdiffEnc49_bs64_clip_uncond75_HumanMl/samples_2024-12-07-22-42-34/Example_50_batch0_0.npy
+2024-12-07 22:42:43,434 Motions are generated here:
+results/WGAN/1222_PELearn_WGAN_Latent1_MEncDec49_MdiffEnc49_bs64_clip_uncond75_HumanMl/samples_2024-12-07-22-42-34/Example_100_batch0_1.npy
+2024-12-07 22:42:43,463 Motions are generated here:
+results/WGAN/1222_PELearn_WGAN_Latent1_MEncDec49_MdiffEnc49_bs64_clip_uncond75_HumanMl/samples_2024-12-07-22-42-34/Example_100_batch0_2.npy
+2024-12-07 22:42:43,479 Motions are generated here:
+results/WGAN/1222_PELearn_WGAN_Latent1_MEncDec49_MdiffEnc49_bs64_clip_uncond75_HumanMl/samples_2024-12-07-22-42-34/Example_100_batch0_3.npy
+2024-12-07 22:42:43,490 Motions are generated here:
+results/WGAN/1222_PELearn_WGAN_Latent1_MEncDec49_MdiffEnc49_bs64_clip_uncond75_HumanMl/samples_2024-12-07-22-42-34/Example_100_batch0_4.npy
+2024-12-07 22:42:43,503 Motions are generated here:
+results/WGAN/1222_PELearn_WGAN_Latent1_MEncDec49_MdiffEnc49_bs64_clip_uncond75_HumanMl/samples_2024-12-07-22-42-34/Example_100_batch0_5.npy
+2024-12-07 22:42:43,514 Motions are generated here:
+results/WGAN/1222_PELearn_WGAN_Latent1_MEncDec49_MdiffEnc49_bs64_clip_uncond75_HumanMl/samples_2024-12-07-22-42-34/Example_100_batch0_6.npy
+2024-12-07 22:42:43,523 Motions are generated here:
+results/WGAN/1222_PELearn_WGAN_Latent1_MEncDec49_MdiffEnc49_bs64_clip_uncond75_HumanMl/samples_2024-12-07-22-42-34/Example_100_batch0_7.npy
+2024-12-07 22:42:43,539 Motions are generated here:
+results/WGAN/1222_PELearn_WGAN_Latent1_MEncDec49_MdiffEnc49_bs64_clip_uncond75_HumanMl/samples_2024-12-07-22-42-34/Example_100_batch0_8.npy
+2024-12-07 22:42:43,554 Motions are generated here:
+results/WGAN/1222_PELearn_WGAN_Latent1_MEncDec49_MdiffEnc49_bs64_clip_uncond75_HumanMl/samples_2024-12-07-22-42-34/Example_100_batch0_9.npy

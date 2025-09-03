@@ -1,0 +1,22 @@
+2024-12-07 22:47:21,581 Loading checkpoints from experiments/WGAN/1223_PELearn_WDenseGAN_Latent1_MEncDec49_MdiffEnc49_bs64_clip_uncond75_HumanMl/checkpoints/epoch=999.ckpt
+2024-12-07 22:47:27,764 model WGAN loaded
+2024-12-07 22:47:28,399 Motions are generated here:
+results/WGAN/1223_PELearn_WDenseGAN_Latent1_MEncDec49_MdiffEnc49_bs64_clip_uncond75_HumanMl/samples_2024-12-07-22-47-18/Example_50_batch0_0.npy
+2024-12-07 22:47:28,411 Motions are generated here:
+results/WGAN/1223_PELearn_WDenseGAN_Latent1_MEncDec49_MdiffEnc49_bs64_clip_uncond75_HumanMl/samples_2024-12-07-22-47-18/Example_100_batch0_1.npy
+2024-12-07 22:47:28,426 Motions are generated here:
+results/WGAN/1223_PELearn_WDenseGAN_Latent1_MEncDec49_MdiffEnc49_bs64_clip_uncond75_HumanMl/samples_2024-12-07-22-47-18/Example_100_batch0_2.npy
+2024-12-07 22:47:28,435 Motions are generated here:
+results/WGAN/1223_PELearn_WDenseGAN_Latent1_MEncDec49_MdiffEnc49_bs64_clip_uncond75_HumanMl/samples_2024-12-07-22-47-18/Example_100_batch0_3.npy
+2024-12-07 22:47:28,467 Motions are generated here:
+results/WGAN/1223_PELearn_WDenseGAN_Latent1_MEncDec49_MdiffEnc49_bs64_clip_uncond75_HumanMl/samples_2024-12-07-22-47-18/Example_100_batch0_4.npy
+2024-12-07 22:47:28,488 Motions are generated here:
+results/WGAN/1223_PELearn_WDenseGAN_Latent1_MEncDec49_MdiffEnc49_bs64_clip_uncond75_HumanMl/samples_2024-12-07-22-47-18/Example_100_batch0_5.npy
+2024-12-07 22:47:28,500 Motions are generated here:
+results/WGAN/1223_PELearn_WDenseGAN_Latent1_MEncDec49_MdiffEnc49_bs64_clip_uncond75_HumanMl/samples_2024-12-07-22-47-18/Example_100_batch0_6.npy
+2024-12-07 22:47:28,515 Motions are generated here:
+results/WGAN/1223_PELearn_WDenseGAN_Latent1_MEncDec49_MdiffEnc49_bs64_clip_uncond75_HumanMl/samples_2024-12-07-22-47-18/Example_100_batch0_7.npy
+2024-12-07 22:47:28,525 Motions are generated here:
+results/WGAN/1223_PELearn_WDenseGAN_Latent1_MEncDec49_MdiffEnc49_bs64_clip_uncond75_HumanMl/samples_2024-12-07-22-47-18/Example_100_batch0_8.npy
+2024-12-07 22:47:28,535 Motions are generated here:
+results/WGAN/1223_PELearn_WDenseGAN_Latent1_MEncDec49_MdiffEnc49_bs64_clip_uncond75_HumanMl/samples_2024-12-07-22-47-18/Example_100_batch0_9.npy

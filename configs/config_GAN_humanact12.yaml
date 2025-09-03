@@ -1,0 +1,99 @@
+####################################
+# The following are general settings
+####################################
+
+NAME: 1222_PELearn_WDenseGAN_Latent1_MEncDec49_MdiffEnc49_bs64_clip_uncond75_HumanAct # Experiment name
+DEBUG: False # Debug mode
+ACCELERATOR: 'gpu' # Devices optioncal: “cpu”, “gpu”, “tpu”, “ipu”, “hpu”, “mps, “auto”
+DEVICE: [0] # Index of gpus eg. [0] or [0,1,2,3]
+
+# Training configuration
+TRAIN:
+  #---------------------------------
+  STAGE: GAN
+  ARCHITECTURE: dense  # simple, dense, style
+  #---------------------------------
+  ABLATION:
+    SKIP_CONNECT: True
+    PE_TYPE: mld
+    DIFF_PE_TYPE: mld
+  DATASETS: ['Humanact12'] # Training datasets
+  NUM_WORKERS: 8 # Number of workers
+  BATCH_SIZE: 64 # Size of batches
+  START_EPOCH: 0 # Start epochMMOTIONENCODER
+  END_EPOCH: 99999 # End epoch
+  RESUME: './experiments/WGAN/1222_PELearn_WDenseGAN_Latent1_MEncDec49_MdiffEnc49_bs64_clip_uncond75_HumanAct/' # Resume training from this path
+  PRETRAINED_VAE: './experiments/mld/1222_PELearn_VAE_MEncDec49_MdiffEnc49_bs64_clip_uncond75_HumanAct12/checkpoints/epoch=4599.ckpt'
+  OPTIM:
+    TYPE: AdamW # Optimizer type
+    LR: 1e-4 # Learning rate
+
+# Evaluating Configuration
+EVAL:
+  DATASETS: ['Humanact12'] # Evaluating datasets
+  BATCH_SIZE: 32 # Evaluating Batch size
+  SPLIT: train
+
+# Test Configuration
+TEST:
+  CHECKPOINTS: './experiments/WGAN/1222_PELearn_WDenseGAN_Latent1_MEncDec49_MdiffEnc49_bs64_clip_uncond75_HumanAct/checkpoints/epoch=49199.ckpt' # Pretrained model path
+  DATASETS: ['Humanact12'] # training datasets
+  SPLIT: train
+  BATCH_SIZE: 32 # training Batch size
+  MEAN: False
+  NUM_SAMPLES: 1
+  FACT: 1
+
+# Datasets Configuration
+DATASET:
+  JOINT_TYPE: 'Humanact12' # join type
+  SAMPLER:
+    REQUEST_FRAMES: null
+    SAMPLING: conseq
+    SAMPLING_STEP: 1
+    MAX_SQE: -1
+    MAX_LEN: -1
+    MIN_LEN: -1
+    MAX_TEXT_LEN: 20
+
+
+METRIC:
+  TYPE: ['HUMANACTMetrics']
+
+# Losses Configuration
+LOSS:
+  TYPE: mld # Losses type
+  LAMBDA_LATENT: 1.0e-5 # Lambda for latent Losses
+  LAMBDA_KL: 1.0e-4 # Lambda for kl Losses
+  LAMBDA_REC: 1.0 # Lambda for reconstruction Losses
+  LAMBDA_GEN: 1.0 # Lambda for text-motion generation losses
+  LAMBDA_CROSS: 1.0 # Lambda for reconstruction Losses
+  LAMBDA_CYCLE: 0.0 # Lambda for cycle Losses
+  LAMBDA_PRIOR: 0.0
+  DIST_SYNC_ON_STEP: False # Sync Losses on step when distributed trained
+
+# Model Configuration
+model:
+  target: modules_humanact12
+  vae: true # whether vae model
+  model_type: WGAN # model type
+  condition: 'action'
+  latent_dim: [1, 256] # latent dimension
+  ff_size: 1024 #
+  num_layers: 15 # number of layers
+  num_head: 4 # number of head layers
+  droupout: 0.1 # dropout rate
+  activation: gelu # activation type
+  guidance_scale: 7.5 #
+  guidance_uncondp: 0.1 # 0.1 0.25
+
+# Logger configuration
+LOGGER:
+  SACE_CHECKPOINT_EPOCH: 50
+  LOG_EVERY_STEPS: 1
+  VAL_EVERY_STEPS: 200
+  TENSORBOARD: True
+  WANDB:
+    PROJECT: null
+    OFFLINE: False
+    RESUME_ID: null

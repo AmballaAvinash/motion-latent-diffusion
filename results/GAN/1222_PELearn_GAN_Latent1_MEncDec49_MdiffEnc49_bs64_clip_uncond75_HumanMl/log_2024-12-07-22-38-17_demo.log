@@ -1,0 +1,22 @@
+2024-12-07 22:38:20,515 Loading checkpoints from experiments/GAN/1222_PELearn_GAN_Latent1_MEncDec49_MdiffEnc49_bs64_clip_uncond75_HumanMl/checkpoints/epoch=1499.ckpt
+2024-12-07 22:38:21,198 model GAN loaded
+2024-12-07 22:38:25,175 Motions are generated here:
+results/GAN/1222_PELearn_GAN_Latent1_MEncDec49_MdiffEnc49_bs64_clip_uncond75_HumanMl/samples_2024-12-07-22-38-17/Example_50_batch0_0.npy
+2024-12-07 22:38:25,188 Motions are generated here:
+results/GAN/1222_PELearn_GAN_Latent1_MEncDec49_MdiffEnc49_bs64_clip_uncond75_HumanMl/samples_2024-12-07-22-38-17/Example_100_batch0_1.npy
+2024-12-07 22:38:25,208 Motions are generated here:
+results/GAN/1222_PELearn_GAN_Latent1_MEncDec49_MdiffEnc49_bs64_clip_uncond75_HumanMl/samples_2024-12-07-22-38-17/Example_100_batch0_2.npy
+2024-12-07 22:38:25,225 Motions are generated here:
+results/GAN/1222_PELearn_GAN_Latent1_MEncDec49_MdiffEnc49_bs64_clip_uncond75_HumanMl/samples_2024-12-07-22-38-17/Example_100_batch0_3.npy
+2024-12-07 22:38:25,246 Motions are generated here:
+results/GAN/1222_PELearn_GAN_Latent1_MEncDec49_MdiffEnc49_bs64_clip_uncond75_HumanMl/samples_2024-12-07-22-38-17/Example_100_batch0_4.npy
+2024-12-07 22:38:25,274 Motions are generated here:
+results/GAN/1222_PELearn_GAN_Latent1_MEncDec49_MdiffEnc49_bs64_clip_uncond75_HumanMl/samples_2024-12-07-22-38-17/Example_100_batch0_5.npy
+2024-12-07 22:38:25,291 Motions are generated here:
+results/GAN/1222_PELearn_GAN_Latent1_MEncDec49_MdiffEnc49_bs64_clip_uncond75_HumanMl/samples_2024-12-07-22-38-17/Example_100_batch0_6.npy
+2024-12-07 22:38:25,306 Motions are generated here:
+results/GAN/1222_PELearn_GAN_Latent1_MEncDec49_MdiffEnc49_bs64_clip_uncond75_HumanMl/samples_2024-12-07-22-38-17/Example_100_batch0_7.npy
+2024-12-07 22:38:25,319 Motions are generated here:
+results/GAN/1222_PELearn_GAN_Latent1_MEncDec49_MdiffEnc49_bs64_clip_uncond75_HumanMl/samples_2024-12-07-22-38-17/Example_100_batch0_8.npy
+2024-12-07 22:38:25,333 Motions are generated here:
+results/GAN/1222_PELearn_GAN_Latent1_MEncDec49_MdiffEnc49_bs64_clip_uncond75_HumanMl/samples_2024-12-07-22-38-17/Example_100_batch0_9.npy
