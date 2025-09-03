@@ -1,6 +1,7 @@
 datasets/
 experiments/
 deps/
+checkpoints/
 
 /data
 /motion-latent-diffusion
